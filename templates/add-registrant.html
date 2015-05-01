@@ -1,0 +1,31 @@
+<div layout="column" layout flex layout-fill>
+  <md-toolbar class="md-accent" style="padding-top: 15px;">
+    <div class="md-toolbar-tools">
+      <h2>Add Registrant <span style="color: rgba(255,255,255,0.65);">{{data.event.title}}</span></h2>
+      <span flex></span>
+    </div>
+  </md-toolbar>
+  <md-content layout-padding flex layout="row">
+    <form flex name="userForm">
+      <div ng-repeat="field in data.fields" layout="column" layout-padding>
+        <div ng-switch="field.type">
+          <md-input-container ng-switch-when="Text">
+            <label>{{field.title}}</label>
+            <input ng-model="data.registrant.fields[field.id]" \>
+          </md-input-container>
+          <div ng-switch-when="Select">
+            <md-input-container ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak>
+              <label>{{field.title}}</label>
+              <md-select ng-model="data.registrant.fields[field.id]" placeholder="Select an option">
+                <md-option ng-value="opt" ng-repeat="opt in field.options">{{ opt }}</md-option>
+              </md-select>
+          </div>
+        </div>
+      </div>
+      <div layout="row">
+        <span flex></span>
+        <md-button ng-click="data.addRegistrant()" class="md-primary md-raised" layout layout-align="center end">Add</md-button>
+      </div>
+    </form>
+  </md-content>
+</div>

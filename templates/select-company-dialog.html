@@ -1,0 +1,33 @@
+<md-dialog aria-label="Create Attendee">
+  <md-toolbar class="md-hue-1">
+    <h2 class="md-toolbar-tools">
+      <span>Select Company</span>
+    </h2>
+  </md-toolbar>
+  <md-content class="sticky-container">
+    <div class="dialog-content">
+      <div flex>
+        <md-autocomplete
+          md-selected-item="data.selected"
+          md-search-text-change="data.searchTextChange(data.searchText)"
+          md-search-text="data.searchText"
+          md-selected-item-change="data.selectedItemChange(item)"
+          md-items="item in data.querySearch(data.searchText)"
+          md-item-text="item.organization"
+          md-min-length="1"            
+          placeholder="Company">
+          <span md-highlight-text="data.searchText" md-highlight-flags="^i">{{item.organization}}</span>
+        </md-autocomplete>
+      </div>
+    </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="close('cancel')" class="md-raised">
+      Cancel
+    </md-button>
+    <md-button ng-click="close('create')" class="md-primary md-raised">
+      Select
+    </md-button>
+  </div>
+</md-dialog>

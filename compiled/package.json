@@ -1,0 +1,36 @@
+{
+  "name": "checkin-app",
+  "description": "Checkin App",
+  "version": "0.1.0",
+  "author": "Matt Voss",
+  "repository": "git@github.com:mattvoss/checkin-app.git",
+  "keywords": [],
+  "main": "templates/index.html",
+  "window": {
+    "title": "node-webkit demo",
+    "toolbar": true,
+    "resizable": true,
+    "kiosk": false,
+    "width": 1000,
+    "height": 600,
+    "min_width": 600,
+    "min_height": 400,
+    "position": "center"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "handlebars": "^3.0.1",
+    "hexy": "^0.2.7",
+    "keypress": "^0.2.1",
+    "moment": "^2.9.0",
+    "nconf": "^0.7.1",
+    "redis": "^0.12.1",
+    "serialport": "^1.6.3",
+    "sf": "0.1.6",
+    "swag": "^0.7.0",
+    "underscore": "^1.8.3"
+  },
+  "webkit": {
+    "plugin": true
+  }
+}

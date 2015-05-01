@@ -1,0 +1,10 @@
+<md-bottom-sheet class="md-grid md-has-header" style="position: fixed;">
+  <md-list>
+    <md-item ng-repeat="item in data.items" ng-show="data.show(item)">
+      <md-button ng-click="data.listItemClick(item)">
+        <md-icon icon="{{item.icon}}"></md-icon>
+        <span class="md-inline-list-icon-label">{{ item.name }}</span>
+      </md-button>
+    </md-item>
+  </md-list>
+</md-bottom-sheet>

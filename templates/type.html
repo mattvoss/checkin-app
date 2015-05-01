@@ -1,0 +1,36 @@
+<div ng-controller="TypeCtrl" layout="column" layout-align="center center" flex>
+  <md-card>
+    <md-toolbar class="md-hue-1">
+      <h2 class="md-toolbar-tools">
+        <span>Select Voter Type</span>
+      </h2>
+    </md-toolbar>
+    <md-content class="md-padding">
+      <md-radio-group ng-model="data.type" ng-change="data.selectType()">
+        <md-radio-button value="management" ng-disabled="data.disableMgmt" class="md-primary">Management</md-radio-button>
+        <div class="typeVoter md-caption" ng-if="data.disableMgmt">
+          {{data.management[0].firstname}} {{data.management[0].lastname}} <br />
+          {{data.management[0].dateCast | amDateFormat:'dddd, MMMM Do YYYY'}} <br />
+          {{data.management[0].dateCast | amDateFormat:'h:mm:ss a'}}
+        </div>
+        <md-radio-button value="non-management" ng-disabled="data.disableNonMgmt">Non-Management</md-radio-button>
+        <div class="typeVoter md-caption" ng-if="data.disableNonMgmt">
+          {{data.nonmanagement[0].firstname}} {{data.nonmanagement[0].lastname}} <br />
+          {{data.nonmanagement[0].dateCast | amDateFormat:'dddd, MMMM Do YYYY'}} <br />
+          {{data.nonmanagement[0].dateCast | amDateFormat:'h:mm:ss a'}}
+        </div>
+      </md-radio-group>
+    </md-content>
+    <md-content class="md-padding">
+      <div class="md-actions" layout="row">
+        <md-button ng-click="previous()" class="md-raised md-accent">
+          Previous
+        </md-button>
+        <span flex></span>
+        <md-button ng-click="next()" class="md-raised md-primary" ng-disabled="data.disableButton">
+          Next
+        </md-button>
+      </div>
+    </md-content>
+  </md-card>
+</div>

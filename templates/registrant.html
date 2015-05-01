@@ -1,0 +1,157 @@
+<div layout="column" layout flex layout-fill>
+  <md-toolbar class="md-accent" style="padding-top: 15px;">
+    <div class="md-toolbar-tools">
+      <h2>{{data.registrant.lastname | trim}}, {{data.registrant.firstname}} <span style="color: rgba(255,255,255,0.65);">{{data.registrant.displayId}}</span></h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-if="data.registrant.attend" aria-label="Checked In">
+        <md-icon icon="stars" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-if="!data.registrant.attend" aria-label="Checked Out" >
+        <md-icon icon="error" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-if="data.registrant.paid" aria-label="Paid" >
+        <md-icon icon="attach_money" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
+      </md-button>
+      
+      <md-button class="md-icon-button" aria-label="More" ng-click="data.showSheet($event, data.registrant)">
+        <md-icon icon="more_vert" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-content flex layout="column">
+    <md-tabs flex md-stretch-tabs>
+      <md-tab>
+        <md-tab-label>Edit</md-tab-label>
+        <md-tab-body>
+          <form name="userForm">
+            <div ng-repeat="field in data.registrant.badgeSchema" layout="column" layout-padding>
+              <div ng-switch="data.registrant.schema[field.id].type">
+                <md-input-container ng-switch-when="Text">
+                  <label>{{data.registrant.schema[field.id].title}}</label>
+                  <input ng-model="data.registrant.fields[field.id]" \>
+                </md-input-container>
+                <div ng-switch-when="Select">
+                  <md-input-container ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak>
+                    <label>{{data.registrant.schema[field.id].title}}</label>
+                    <md-select ng-model="data.registrant.fields[field.id]" placeholder="Select an option">
+                      <md-option ng-value="opt" ng-repeat="opt in data.registrant.schema[field.id].options">{{ opt }}</md-option>
+                    </md-select>
+                </div>
+              </div>
+            </div>
+            <div layout="row">
+              <span flex></span>
+              <md-button ng-click="data.updateRegistrant()" class="md-primary md-raised" layout layout-align="center end">Update</md-button>
+            </div>
+          </form>
+        </md-tab-body>
+      </md-tab>
+      <md-tab>
+        <md-tab-label>Linked Registrants</md-tab-label>
+        <md-tab-body>
+          <md-content layout="column" flex>
+            <md-list>
+              <md-list-item ng-repeat="lregistrant in data.registrant.linked" class="md-3-line" ng-click="goToPerson(lregistrant, $event)">
+                <md-icon ng-if="lregistrant.attend" icon="stars" size="48" style="width: 48px; height: 48px; fill: green;"></md-icon>
+                <md-icon ng-if="!lregistrant.attend" icon="error" size="48" style="width: 48px; height: 48px; fill: red;"></md-icon>
+                <div class="md-list-item-text" layout="row">
+                  <div flex="25">
+                    <span class="md-title">{{data.registrant.badge_prefix}}-{{lregistrant.id}}</span><br />
+                    <h4 style="color: rgba(0,0,0,0.65);">
+                      <span ng-if="data.registrant.badge_prefix == 'E'">{{data.registrant.confirmation}}</span>
+                      <span ng-if="data.registrant.badge_prefix != 'E'">{{lregistrant.confirmnum}}</span>
+                    </h4>
+                  </div>
+                  <div flex="50">
+                    <span class="md-title">{{lregistrant.lastname}}, {{lregistrant.firstname}}</span><br />
+                    <h4 style="color: rgba(0,0,0,0.65);">{{data.registrant.company}}</h4>
+                  </div>
+                  <div flex="25">
+                    <span class="md-body-2">{{data.registrant.biller.register_date | amDateFormat:'MM/DD/YYYY'}}</span>
+                  </div>
+                </div>
+                <md-button aria-label="Info" ng-click="data.showSheetLinked($event, lregistrant)">
+                  <md-icon icon="more_vert"></md-icon>
+                </md-button>
+                <md-divider ng-if="!$last"></md-divider>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </md-tab-body>
+      </md-tab>
+      <md-tab>
+        <md-tab-label>Payment(s)</md-tab-label>
+        <md-tab-body>
+          <md-content layout-padding layout="column" flex>
+            <div layout="row">
+              <div flex class="md-title">
+                <span ng-if="data.registrant.paid">Receipt</span>
+                <span ng-if="!data.registrant.paid">Invoice</span>
+              </div>
+              <div flex></div>
+              <div flex style="text-align: right;" class="md-title">
+                {{data.registrant.biller.confirmNum}}
+              </div>
+            </div>
+            <md-divider></md-divider>
+            <div layout="row" style="margin-top: 5px;">
+              <div flex></div>
+              <div flex="33" style="text-align: right;" class="md-body-1">
+                {{data.registrant.biller.register_date | amDateFormat:'MM/DD/YYYY'}} <br />
+              </div>
+            </div>
+            <div layout="row" style="margin-top: 15px;">
+              <div flex class="md-body-1" ng-style="{background:mdThemeColors.primary['50']}" style="padding: 15px;">
+                <h3 class="md-subhead">Billed To:</h3>
+                <div class="md-caption">
+                  {{data.registrant.biller.firstname}} {{data.registrant.biller.lastname}}<br />
+                  {{data.registrant.biller.baddress1}} <br />
+                  <span ng-if="data.registrant.biller.baddress2">{{data.registrant.biller.baddress2}} <br /></span>
+                  {{data.registrant.biller.bcity}}, {{data.registrant.biller.bstate}} {{data.registrant.biller.bzip}} <br />
+                </div>
+              </div>
+              <div flex></div>
+              <div flex class="md-body-1"  ng-style="{background:mdThemeColors.primary['50']}" style="padding: 15px;">
+                <h3 class="md-subhead">Payment Method:</h3>
+                <div class="md-caption">
+                  <span ng-if="data.registrant.payments[0].payment_method == 'authorizenet'">
+                    Type: {{data.registrant.creditCardTrans[0].cardType}} <br />
+                    Card Number: {{data.registrant.creditCardTrans[0].cardNumber}} <br />
+                    Transaction ID: {{data.registrant.creditCardTrans[0].transId}} <br />
+                    Date: {{data.registrant.creditCardTrans[0].submitTimeUTC | amDateFormat:'MM/DD/YYYY'}} <br />
+                  </span>
+                  <span ng-if="data.registrant.payments[0].payment_method == '2'">
+                    Check <br />
+                  </span>
+                  {{data.registrant.biller.email}} <br />
+                </div>
+              </div>
+            </div>
+            <div layout="row" style="margin-top: 15px;">
+              <div flex>
+                <table id="table" class="table table-hover table-mc-light-blue">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td data-title="Item">{{data.registrant.biller.type}}{{data.registrant.biller.userId}}</td>
+                      <td data-title="Price">Conference Registration</td>
+                      <td data-title="Quantity">1</td>
+                      <td data-title="Total">{{data.registrant.payments[0].fee}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </md-content>
+        </md-tab-body>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+</div>

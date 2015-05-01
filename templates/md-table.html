@@ -1,0 +1,44 @@
+<md-content layout="column" flex>
+
+  <table flex layout="column" class="md-table">
+    <thead flex>
+      <tr class="md-table-headers-row" flex layout="row">
+        <th ng-repeat="h in headers" class="md-table-header" flex layout>
+          <a href="#" ng-if="handleSort(h.field)" ng-click="reverse=!reverse;sort(h.field,reverse)">
+            {{h.name}} 
+            <md-icon icon="arrow_drop_down" ng-show="reverse && h.field == predicate"></md-icon> 
+            <md-icon icon="arrow_drop_up"  ng-show="!reverse && h.field == predicate"></md-icon> 
+          </a>
+          <span ng-if="!handleSort(h.field)">{{h.name}}</span>
+        </th>
+        <th class="md-table-header"></th>
+      </tr>
+    </thead>
+    <tbody flex>
+      <tr ng-repeat="c in content | filter:filters | startFrom:tablePage*count | limitTo: count" class="md-table-content-row" layout="row">
+        <td ng-repeat="h in headers" ng-class="customClass[h.field]" ng-if="h.field != thumbs" class="md-table-content" flex layout>
+          {{c[h.field]}}
+        </td>
+        <td class="md-table-td-more" layout flex>
+          <md-button aria-label="Info">
+            <md-icon icon="more_vert"></md-icon> 
+          </md-button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div flex layout="row" class="md-table-footer">
+    <span class="md-table-count-info" flex layout>
+      Rows per page : <a href="#" ng-click="goToPage(0); count=10">10</a>, <a href="#" ng-click="goToPage(0); count=25">25</a>, <a href="#" ng-click="goToPage(0); count=50">, 50</a>, <a href="#" ng-click="goToPage(0); count=100">100</a> (current is {{count}})
+    </span>
+    <span flex="flex" layout></span>
+    <span ng-show="nbOfPages() > 1" flex layout>
+      <md-button ng-disabled="tablePage==0" ng-click="tablePage=tablePage-1" aria-label="Previous Page" class="md-primary md-hue-2 md-icon-button"><md-icon icon="chevron_left"></md-icon></md-button>
+      <a href="#" ng-repeat="i in getNumber(nbOfPages()) track by $index"><md-button ng-click="goToPage($index)" class="md-primary md-hue-2 md-table-footer-item"><span ng-class="{ 'md-table-active-page': tablePage==$index}">{{$index+1}}</span></md-button></a>
+      <md-button ng-disabled="tablePage==nbOfPages()-1" ng-click="tablePage=tablePage+1" aria-label="Next Page" class="md-primary md-hue-2 md-icon-button">
+        <md-icon icon="chevron_right"></md-icon>
+      </md-button>
+    </span>
+  </div>
+</md-content>

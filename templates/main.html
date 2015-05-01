@@ -1,0 +1,50 @@
+<div layout="column" layout flex layout-fill>
+  <md-content layout-padding layout="row">
+    <div flex="33" layout-align='start center'>
+      <md-select layout-fill placeholder="Pick" ng-model="data.category" flex style="margin-top: 0.5em;">
+        <md-option value="name">Name</md-option>
+        <md-option value="company">Company</md-option>
+        <md-option value="confirmation">Confirmation Number</md-option>
+      </md-select>
+    </div>
+    <div flex="50" layout-align='start center'>
+      <md-input-container layout-fill style="margin-top: 0.35em;">
+        <input type="text" ng-model="data.searchVal" aria-label="search" ng-keyup="$event.keyCode == 13 && data.searchClick($event)" />
+        <md-icon icon="highlight_remove" ng-show="data.searchVal" style="right: 2px; color: rgba(0,0,0,0.24); left: inherit;" ng-click="data.clearInput($event)"></md-icon>
+      </md-input-container>
+    </div>
+    <div flex>
+      <md-button aria-label="Search" ng-click="data.searchClick($event)">
+        <md-icon icon="search"></md-icon>
+      </md-button>
+    </div>
+  </md-content>
+  <md-content layout="column" flex>
+    <md-list>
+      <md-list-item ng-repeat="registrant in data.registrants" class="md-3-line" md-ink-ripple>
+        <md-icon ng-if="registrant.attend" icon="stars" size="48" style="width: 48px; height: 48px; fill: green;"></md-icon>
+        <md-icon ng-if="!registrant.attend" icon="error" size="48" style="width: 48px; height: 48px; fill: red;"></md-icon>
+        <div class="md-list-item-text" layout="row">
+          <div flex="25">
+            <span class="md-title">{{registrant.displayId}}</span><br />
+            <h4 style="color: rgba(0,0,0,0.65);">{{registrant.confirmation}}</h4>
+          </div>
+          <div flex="50">
+            <span class="md-title">{{registrant.lastname | trim}}, {{registrant.firstname | trim}}</span><br />
+            <h4 style="color: rgba(0,0,0,0.65);">{{registrant.company}}</h4>
+          </div>
+          <div flex="25">
+            <span class="md-body-2">{{registrant.biller.register_date | amDateFormat:'MM/DD/YYYY'}}</span>
+          </div>
+        </div>
+        <md-button aria-label="Info" ng-click="data.showSheet($event, registrant)">
+          <md-icon icon="more_vert"></md-icon>
+        </md-button>
+        <md-divider ng-if="!$last"></md-divider>
+      </md-list-item>
+    </md-list>
+  </md-content>
+  <md-content layout-padding layout="row" style="background-color: #E8EAF6;">
+    Total: {{data.count}}
+  </md-content>
+</div>

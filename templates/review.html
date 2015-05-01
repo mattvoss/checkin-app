@@ -1,0 +1,32 @@
+<div ng-controller="ReviewCtrl"  layout="column" layout-align="center center" layout-fill flex layout-padding>
+  <md-whiteframe class="md-whiteframe-z1" layout="column" layout-align="center center" layout-fill>
+    <md-toolbar class="md-hue-1">
+      <h2 class="md-toolbar-tools">
+        <span>Review Votes</span>
+      </h2>
+    </md-toolbar>
+    <md-content layout-fill>
+      <md-list>
+        <md-list-item class="md-2-line" ng-repeat="vote in data.votes">
+          <div class="md-list-item-text">
+            <h3>{{vote.title}}</h3>
+            <p>{{vote.vote.name}}</p>
+          </div>
+          <md-button class="md-raised md-secondary" ng-click="data.change(vote.id)">Change Vote</md-button>
+          <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+      </md-list>
+    </md-content>
+    <md-content layout-fill>
+      <div class="md-actions" layout="row" layout-padding>
+        <md-button ng-click="previous()" class="md-raised md-accent">
+          Previous
+        </md-button>
+        <span flex></span>
+        <md-button ng-click="next()" class="md-raised md-primary" ng-disabled="data.disableButton">
+          Cast Vote(s)
+        </md-button>
+      </div>
+    </md-content>
+  </md-whiteframe>
+</div>

@@ -1,0 +1,29 @@
+<md-dialog aria-label="Setttings">
+  <md-toolbar class="md-hue-1">
+    <h2 class="md-toolbar-tools">
+      <span>Settings</span>
+    </h2>
+  </md-toolbar>
+  <md-content class="sticky-container">
+    <div class="dialog-content">
+      <div flex>
+        <md-input-container>
+          <label>Server Url</label>
+          <input ng-model="values.url" placeholder="Enter the server url" ng-model="values.url" ng-change="serverUrlChange()" />
+        </md-input-container>
+        <md-select placeholder="Pick a serial port" ng-model="values.serialSelected" ng-change="serialPortChange()">
+          <md-option data-ng-value="port.device" data-ng-repeat="port in values.ports" ng-selected="values.serialSelected">{{ port.name }}</md-option>
+        </md-select>
+      </div>
+    </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="answer('not useful')">
+      Cancel
+    </md-button>
+    <md-button ng-click="answer('useful')" class="md-primary">
+      Done
+    </md-button>
+  </div>
+</md-dialog>

@@ -1,0 +1,66 @@
+<md-dialog aria-label="Payment" flex>
+  <md-toolbar class="md-hue-1">
+    <h2 class="md-toolbar-tools">
+      <span>Payment</span>
+    </h2>
+  </md-toolbar>
+  <md-content class="sticky-container" layout-padding>
+    <div class="dialog-content" flex style="min-height: 600px;">
+      <md-input-container flex>
+        <label>Amount</label>
+        <input ng-model="data.amount">
+      </md-input-container>
+      <md-tabs flex md-stretch-tabs style="min-height: 600px;">
+        <md-tab>
+          <md-tab-label>Swipe</md-tab-label>
+          <md-tab-body>
+            <md-button class="md-raised md-primary md-hue-2" ng-disabled="data.canSubmit()" ng-click="data.swipeClick()">Click to capture swipe</md-button>
+            <input type="text" id="txtHidden" style="opacity: 0;" />
+          </md-tab-body>
+        </md-tab>
+        <md-tab>
+          <md-tab-label>Manual</md-tab-label>
+          <md-tab-body>
+            <div credit-card-form style="margin-top: 15px;">
+              <div credit-card-container></div>
+              <md-input-container flex>
+                <label>Card Number</label>
+                <input ng-model="data.cardNumber" credit-card-number>
+              </md-input-container>
+              <md-input-container flex>
+                <label>Name on Card</label>
+                <input ng-model="data.name" credit-card-name>
+              </md-input-container>
+              <md-input-container flex>
+                <label>Expiration Date</label>
+                <input ng-model="data.expirationDate" credit-card-expiry>
+              </md-input-container>
+              <md-input-container flex>
+                <label>Security Code</label>
+                <input ng-model="data.security" credit-card-cvc>
+              </md-input-container>
+            </div>
+          </md-tab-body>
+        </md-tab>
+        <md-tab>
+          <md-tab-label>Check</md-tab-label>
+          <md-tab-body>
+            <md-input-container flex>
+              <label>Check Number</label>
+              <input ng-model="data.check">
+            </md-input-container>
+          </md-tab-body>
+        </md-tab>
+      </md-tabs>
+    </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="close('cancel')" class="md-raised">
+      Cancel
+    </md-button>
+    <md-button ng-click="close('pay')" ng-disabled="data.canSubmit()" class="md-primary md-raised">
+      Pay
+    </md-button>
+  </div>
+</md-dialog>

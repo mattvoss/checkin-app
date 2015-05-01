@@ -1,0 +1,41 @@
+<div ng-controller="SiteIdCtrl" layout="column" layout-align="center center" flex>
+  <md-content> 
+    <md-card>
+      <md-toolbar class="md-hue-1">
+        <h2 class="md-toolbar-tools">
+          <span>Site Information</span>
+        </h2>
+      </md-toolbar>
+      <md-card-content class="md-padding">
+        <md-autocomplete flex
+            md-no-cache="ctrl.noCache"
+            md-selected-item="site"
+            md-search-text="ctrl.searchText"
+            md-items="item in ctrl.querySearch(ctrl.searchText)"
+            md-item-text="item.siteId"
+            md-floating-label="Site ID"
+            ng-init="ctrl.searchText=site.siteId">
+          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.company}}</span>
+        </md-autocomplete>
+
+        <h3 class="md-title">{{site.company}}</h3>
+        <p>
+          {{site.street1}} <br />
+          <span ng-if="site.street2" model>{{site.street2}}<br /></span>
+          {{site.city}}, {{site.state}} {{site.zip}}
+        </p>
+      </md-card-content>
+      <md-card-footer class="md-padding">
+        <div class="md-actions" layout="row">
+          <md-button ng-click="previous()" class="md-raised md-accent">
+            Previous
+          </md-button>
+          <span flex></span>
+          <md-button ng-click="next()" class="md-raised md-primary">
+            Next
+          </md-button>
+        </div>
+      </md-card-footer>
+    </md-card>
+  </md-content>
+</div>

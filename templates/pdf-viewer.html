@@ -1,0 +1,27 @@
+<md-toolbar class="md-sticky-no-effect">
+  <div class="md-toolbar-tools">
+    <md-button ng-click="goPrevious()" aria-label="previous">
+      <md-icon icon="chevron_left" style="fill: white;"></md-icon>
+    </md-button>
+    <md-button ng-click="goNext()" aria-label="next">
+      <md-icon icon="chevron_right" style="fill: white;"></md-icon>
+    </md-button>
+    <md-button ng-click="zoomIn()" aria-label="zoom in">
+      <md-icon icon="add" style="fill: white;"></md-icon>
+    </md-button>
+    <md-button ng-click="zoomOut()" aria-label="zoom out">
+      <md-icon icon="remove" style="fill: white;"></md-icon>
+    </md-button>
+    <md-button ng-click="rotate()" aria-label="rotate">
+      <md-icon icon="rotate_right" style="fill: white;"></md-icon>
+    </md-button>
+    <span flex></span>
+    <md-button ng-click="close()" aria-label="rotate">
+      <md-icon icon="clear" style="fill: white;"></md-icon>
+    </md-button>
+  </div>
+</md-toolbar>
+<div class="dialog-content">
+  {{loading}}
+  <canvas id="pdf-canvas" class="rotate0"></canvas>
+</div>

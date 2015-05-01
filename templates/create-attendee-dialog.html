@@ -1,0 +1,26 @@
+<md-dialog aria-label="Create Attendee">
+  <md-toolbar class="md-hue-1">
+    <h2 class="md-toolbar-tools">
+      <span>Create Attendee</span>
+    </h2>
+  </md-toolbar>
+  <md-content class="sticky-container">
+    <div class="dialog-content">
+      <div flex>
+        <p>Selected attendee type you want to create:</span> </p>
+        <md-radio-group ng-model="data.selected">
+          <md-radio-button data-ng-value="attendee" data-ng-repeat="attendee in data.attendees">{{ attendee.title }}</md-radio-button>
+        </md-radio-group>
+      </div>
+    </div>
+  </md-content>
+  <div class="md-actions" layout="row">
+    <span flex></span>
+    <md-button ng-click="close('cancel')" class="md-raised">
+      Cancel
+    </md-button>
+    <md-button ng-click="close('create')" class="md-primary md-raised">
+      Create
+    </md-button>
+  </div>
+</md-dialog>

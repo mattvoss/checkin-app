@@ -1,0 +1,25 @@
+<div ng-controller="OfficeCtrl" layout="column" layout-align="center center" flex>
+  <md-card>
+    <md-toolbar class="md-hue-1">
+      <h2 class="md-toolbar-tools">
+        <span>{{data.office.title}}</span>
+      </h2>
+    </md-toolbar>
+    <md-content class="md-padding">
+      <md-radio-group ng-model="data.vote" ng-change="data.selectCandidate()">
+        <md-radio-button ng-value="candidate" ng-repeat="candidate in data.candidates">{{candidate.name}}</md-radio-button>
+      </md-radio-group>
+    </md-content>
+    <md-content class="md-padding">
+      <div class="md-actions" layout="row">
+        <md-button ng-click="previous()" class="md-raised md-accent">
+          Previous
+        </md-button>
+        <span flex></span>
+        <md-button ng-click="next()" class="md-raised md-primary" ng-disabled="data.disableButton">
+          Next
+        </md-button>
+      </div>
+    </md-content>
+  </md-card>
+</div>
