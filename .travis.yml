@@ -39,6 +39,7 @@ install:
 - nvm install 6
 - npm install npm -g
 - npm install
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm install 7zip-bin-linux; fi
 - npm install electron-builder@next
 - npm prune
 script:
