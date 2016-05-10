@@ -1,10 +1,6 @@
 platform:
   - x64
   
-on:
-  branch: master                 # release from master branch only
-  appveyor_repo_tag: true        # deploy on tag push only
-  
 cache:
   - node_modules
   - '%APPDATA%\npm-cache'
