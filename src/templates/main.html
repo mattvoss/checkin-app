@@ -1,5 +1,5 @@
 <div layout="column" layout flex layout-fill>
-  <md-content layout-padding layout="row">
+  <md-content layout-padding layout="row" style="min-height: 90px;">
     <div flex="33" layout-align='start center'>
       <md-select layout-fill placeholder="Pick" ng-model="data.category" flex style="margin-top: 0.5em;">
         <md-option value="name">Name</md-option>
@@ -52,7 +52,7 @@
       </md-list-item>
     </md-list>
   </md-content>
-  <md-content layout-padding layout="row" style="background-color: #E8EAF6;">
+  <md-content layout-padding layout="row" style="background-color: #E8EAF6; min-height: 45px;">
     <div>Total: {{data.count}}</div>
     <div flex></div>
     <div>Checked In: {{data.checkedin}}</div>

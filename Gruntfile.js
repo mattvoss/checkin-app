@@ -105,9 +105,18 @@ module.exports = function(grunt) {
             expand: true,
             flatten: true,
             src: [
-              'src/*.js'
+              'src/main.js'
             ],
             dest: 'app',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [
+              'src/js/winSquirrelStartupEventHandler.js'
+            ],
+            dest: 'app/js',
             filter: 'isFile'
           },
           {
