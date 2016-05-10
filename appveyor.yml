@@ -6,12 +6,22 @@ cache:
   - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
+environment:
+  GH_TOKEN:
+    secure: 3fb3abba2b6fc32212b9c134da6705ab8661dd38
+
 install:
   - ps: Install-Product node 6 x64
+  - git reset --hard HEAD
   - npm install npm -g
   - node -v
   - npm -v
   - npm prune
   - npm install
-
+  
+build_script:
+  - node --version
+  - npm --version
+  - npm run dist
+  
 build: off
