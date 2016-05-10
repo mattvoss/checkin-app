@@ -24,4 +24,7 @@ build_script:
   - npm --version
   - npm run dist
   
-build: off
+artifacts:
+  - path: dist\*
+
+test: off
