@@ -6,7 +6,7 @@
     "app-category-type": "public.app-category.productivity"
   },
   "scripts": {
-    "postinstall": "node_modules/.bin/install-app-deps",
+    "postinstall": "install-app-deps",
     "dev": "npm run compile:dev && electron ./app",
     "run": "npm run compile && electron ./app",
     "start": "npm install && npm run compile && electron ./app",
@@ -15,10 +15,10 @@
     "clean:win": "rimraf dist/win",
     "compile:dev": "grunt dev",
     "compile": "grunt build",
-    "pack": "npm run compile && node_modules/.bin/build",
-    "dist": "npm run compile && node_modules/.bin/build",
-    "release": "npm run compile && node_modules/.bin/build",
-    "dist:win64": "./node_modules/.bin/build --platform win32 --arch x64"
+    "pack": "npm run compile && build",
+    "dist": "npm run compile && build",
+    "release": "npm run compile && build",
+    "dist:win64": "build --platform win32 --arch x64"
   },
   "devDependencies": {
     "grunt": "latest",
