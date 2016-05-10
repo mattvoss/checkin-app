@@ -45,9 +45,9 @@ script:
 - npm run dist
 after_success:
 - cd dist/
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; tar -czf osx.latest.tgz checkin-app-darwin-x64; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar -czf osx.$DATE.tgz checkin-app-darwin-x64; fi
 - export SSHPASS=$DEPLOY_PASS
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; sshpass -e scp osx.latest.tgz $DEPLOY_HOST; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sshpass -e scp osx.$DATE.tgz $DEPLOY_HOST; fi
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
