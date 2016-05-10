@@ -3,17 +3,11 @@
     <div class="md-toolbar-tools">
       <h2>{{data.registrant.lastname | trim}}, {{data.registrant.firstname}} <span style="color: rgba(255,255,255,0.65);">{{data.registrant.displayId}}</span></h2>
       <span flex></span>
-      <md-button class="md-icon-button" ng-if="data.registrant.attend" aria-label="Checked In">
-        <md-icon icon="stars" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
-      </md-button>
-      <md-button class="md-icon-button" ng-if="!data.registrant.attend" aria-label="Checked Out" >
-        <md-icon icon="error" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
-      </md-button>
-      <md-button class="md-icon-button" ng-if="data.registrant.paid" aria-label="Paid" >
-        <md-icon icon="attach_money" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
-      </md-button>
+        <md-icon ng-if="data.registrant.attend" aria-label="Checked In" icon="stars" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
+        <md-icon ng-if="!data.registrant.attend" aria-label="Checked Out" icon="error" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
+        <md-icon ng-if="data.registrant.paid" aria-label="Paid" icon="attach_money" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
       
-      <md-button class="md-icon-button" aria-label="More" ng-click="data.showSheet($event, data.registrant)">
+      <md-button aria-label="More" ng-click="data.showSheet($event, data.registrant)">
         <md-icon icon="more_vert" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
       </md-button>
     </div>
@@ -26,12 +20,12 @@
           <form name="userForm">
             <div ng-repeat="field in data.registrant.badgeSchema" layout="column" layout-padding>
               <div ng-switch="data.registrant.schema[field.id].type">
-                <md-input-container ng-switch-when="Text">
+                <md-input-container ng-switch-when="Text" class="md-block">
                   <label>{{data.registrant.schema[field.id].title}}</label>
                   <input ng-model="data.registrant.fields[field.id]" \>
                 </md-input-container>
                 <div ng-switch-when="Select">
-                  <md-input-container ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak>
+                  <md-input-container class="md-block" ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak>
                     <label>{{data.registrant.schema[field.id].title}}</label>
                     <md-select ng-model="data.registrant.fields[field.id]" placeholder="Select an option">
                       <md-option ng-value="opt" ng-repeat="opt in data.registrant.schema[field.id].options">{{ opt }}</md-option>
@@ -44,6 +38,39 @@
               <md-button ng-click="data.updateRegistrant()" class="md-primary md-raised" layout layout-align="center end">Update</md-button>
             </div>
           </form>
+        </md-tab-body>
+      </md-tab>
+      <md-tab>
+        <md-tab-label>Site</md-tab-label>
+        <md-tab-body>
+          <md-content layout="column" layout-padding flex>
+            <md-autocomplete
+              md-menu-class="autocomplete-custom-template"
+              md-selected-item="data.siteSelected"
+              md-search-text-change="data.siteSearchTextChange(data.siteSearchText)"
+              md-search-text="data.siteSearchText"
+              md-selected-item-change="data.siteSelectedItemChange(item)"
+              md-items="item in data.siteQuerySearch(data.siteSearchText)"
+              md-item-text="item.siteId"
+              md-min-length="3"
+              md-delay="500"
+              placeholder="Company Name">
+              <md-item-template>
+                <span md-highlight-text="data.siteSearchText" md-highlight-flags="^i">
+                  {{item.company}} - {{item.siteId}} <br />
+                  {{item.city}}, {{item.state}} 
+                </span>
+              </md-item-template>
+            </md-autocomplete>
+            <h3>{{data.registrant.site.company}}</h3>
+            <div>
+            {{data.registrant.site.siteId}} <br />
+            {{data.registrant.site.street1}} <br />
+            {{data.registrant.site.street2}} <br />
+            {{data.registrant.site.city}}, {{data.registrant.site.state}}<br />
+            {{data.registrant.site.zipCode}}
+            </div>
+          </md-content>
         </md-tab-body>
       </md-tab>
       <md-tab>
@@ -67,7 +94,7 @@
                     <h4 style="color: rgba(0,0,0,0.65);">{{data.registrant.company}}</h4>
                   </div>
                   <div flex="25">
-                    <span class="md-body-2">{{data.registrant.biller.register_date | amDateFormat:'MM/DD/YYYY'}}</span>
+                    <span class="md-body-2">{{data.registrant.biller.register_date | amUtc | amDateFormat:'MM/DD/YYYY'}}</span>
                   </div>
                 </div>
                 <md-button aria-label="Info" ng-click="data.showSheetLinked($event, lregistrant)">
@@ -97,7 +124,7 @@
             <div layout="row" style="margin-top: 5px;">
               <div flex></div>
               <div flex="33" style="text-align: right;" class="md-body-1">
-                {{data.registrant.biller.register_date | amDateFormat:'MM/DD/YYYY'}} <br />
+                {{data.registrant.biller.register_date | amUtc | amDateFormat:'MM/DD/YYYY'}} <br />
               </div>
             </div>
             <div layout="row" style="margin-top: 15px;">
@@ -105,23 +132,24 @@
                 <h3 class="md-subhead">Billed To:</h3>
                 <div class="md-caption">
                   {{data.registrant.biller.firstname}} {{data.registrant.biller.lastname}}<br />
-                  {{data.registrant.biller.baddress1}} <br />
-                  <span ng-if="data.registrant.biller.baddress2">{{data.registrant.biller.baddress2}} <br /></span>
-                  {{data.registrant.biller.bcity}}, {{data.registrant.biller.bstate}} {{data.registrant.biller.bzip}} <br />
+                  {{data.registrant.biller.organization}} <br />
+                  {{data.registrant.biller.address}} <br />
+                  <span ng-if="data.registrant.biller.address2">{{data.registrant.biller.address2}} <br /></span>
+                  {{data.registrant.biller.city}}, {{data.registrant.biller.state}} {{data.registrant.biller.zip}} <br />
                 </div>
               </div>
               <div flex></div>
               <div flex class="md-body-1"  ng-style="{background:mdThemeColors.primary['50']}" style="padding: 15px;">
                 <h3 class="md-subhead">Payment Method:</h3>
                 <div class="md-caption">
-                  <span ng-if="data.registrant.payments[0].payment_method == 'authorizenet'">
-                    Type: {{data.registrant.creditCardTrans[0].cardType}} <br />
-                    Card Number: {{data.registrant.creditCardTrans[0].cardNumber}} <br />
-                    Transaction ID: {{data.registrant.creditCardTrans[0].transId}} <br />
-                    Date: {{data.registrant.creditCardTrans[0].submitTimeUTC | amDateFormat:'MM/DD/YYYY'}} <br />
+                  <span ng-if="data.registrant.transactions[0].AVSResponse">
+                    Type: {{data.registrant.transactions[data.registrant.transactions.length-1].cardType}} <br />
+                    Card Number: {{data.registrant.transactions[data.registrant.transactions.length-1].cardNumber}} <br />
+                    Transaction ID: {{data.registrant.transactions[data.registrant.transactions.length-1].transId}} <br />
+                    Date: {{data.registrant.transactions[data.registrant.transactions.length-1].submitTimeUTC | amUtc | amDateFormat:'MM/DD/YYYY'}} <br />
                   </span>
                   <span ng-if="data.registrant.payments[0].payment_method == '2'">
-                    Check <br />
+                    Check {{data.registrant.biller.transaction_id}}<br />
                   </span>
                   {{data.registrant.biller.email}} <br />
                 </div>
@@ -140,10 +168,10 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td data-title="Item">{{data.registrant.biller.type}}{{data.registrant.biller.userId}}</td>
+                      <td data-title="Item">{{data.registrant.badge_prefix}}{{data.registrant.biller.userId}}</td>
                       <td data-title="Price">Conference Registration</td>
                       <td data-title="Quantity">1</td>
-                      <td data-title="Total">{{data.registrant.payments[0].fee}}</td>
+                      <td data-title="Total">{{data.totalAmount || currency}}</td>
                     </tr>
                   </tbody>
                 </table>

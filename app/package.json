@@ -1,0 +1,46 @@
+{
+  "name": "checkin-app",
+  "productName": "checkin-app",
+  "description": "Checkin App",
+  "version": "0.1.0",
+  "author": {
+    "name": "Matt Voss",
+    "email": "voss.matthew@gmail.com"
+  },
+  "repository": "git@github.com:mattvoss/checkin-app.git",
+  "keywords": [],
+  "window": {
+    "toolbar": true,
+    "resizable": true,
+    "width": 1000,
+    "height": 600,
+    "min_width": 600,
+    "min_height": 400,
+    "position": "center"
+  },
+  "private": true,
+  "main": "./main.js",
+  "dependencies": {
+    "card-swipe": "mattvoss/card-swipe",
+    "handlebars": "^3.0.1",
+    "hexy": "^0.2.7",
+    "jquery": "^2.1.4",
+    "keypress": "^0.2.1",
+    "nconf": "^0.7.1",
+    "redis": "^0.12.1",
+    "sf": "0.1.6",
+    "swag": "^0.7.0",
+    "swipe": "^1.7.7",
+    "angular": "^1.5.5",
+    "async": "^1.5.2",
+    "axon": "^2.0.1",
+    "jquery": "^2.1.4",
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.3",
+    "serialport": "^2.1.0",
+    "socket.io": "^1.3.5",
+    "socket.io-client": "^1.3.5",
+    "underscore": "^1.8.3",
+    "angular": "^1.5.5"
+  }
+}

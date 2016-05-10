@@ -17,22 +17,20 @@
     );
     $scope.serialPortChange = function() {
       if ($scope.values.serialSelected !== null) {
-       serialport.setPort($scope.values.serialSelected);
+        console.log($scope.values.serialSelected);
       }
     };
     $scope.serverUrlChange = function() {
       if ($scope.values.url !== null) {
-       server.set($scope.values.url);
+        console.log($scope.values.url);
       }
     };
-    $scope.hide = function() {
-      $mdDialog.hide();
-    };
-    $scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-    $scope.answer = function(answer) {
-      $mdDialog.hide(answer);
+    $scope.hide = function(action) {
+      var data = null;
+      if (action === "update") {
+        data = $scope.values;
+      }
+      $mdDialog.hide(data);
     };
   }
   
@@ -54,19 +52,31 @@
   
   angular
   .module('CheckinApp.controllers', ['ngMaterial', 'mdThemeColors'])
-  .controller('MainCtrl', function ($scope, $rootScope, $state, $mdDialog, $mdToast, mdThemeColors, timeouts, appData, keypress) {
+  .controller('MainCtrl', function ($scope, $rootScope, $state, $mdDialog, $mdToast, mdThemeColors, timeouts, appData, server, serialport) {
     $scope.mdThemeColors = mdThemeColors;
     var showSettings = function(ev) { 
-          $mdDialog.show({
-            controller: SettingsDialogController,
-            templateUrl: '../templates/settings.html',
-            targetEvent: ev,
-          })
-          .then(function(answer) {
-            $scope.alert = 'You said the information was "' + answer + '".';
-          }, function() {
-            $scope.alert = 'You cancelled the dialog.';
-          });
+          $mdDialog.show(
+            {
+              controller: SettingsDialogController,
+              templateUrl: '../templates/settings.html',
+              targetEvent: ev,
+            }
+          )
+          .then(
+            function(data) {
+              if (data !== null) {
+                if (data.url !== null) {
+                  server.set(data.url);
+                }
+                if (data.serialSelected !== null) {
+                  serialport.setPort(data.serialSelected);
+                }
+              }
+            }, 
+            function(error) {
+              console.log(error);
+            }
+          );
         },
         showCompanyDialog = function(ev, event) {
           $mdDialog.show(
@@ -96,7 +106,7 @@
             function(data) {
               if (data !== null && data.reg_type === "E") {
                 showCompanyDialog(ev, data);
-              } else if (data.reg_type === "Z") {
+              } else if (data !== null) {
                 $state.transitionTo('add', {event: data, biller: null});
               }
             }, function(error) {
@@ -163,7 +173,7 @@
       }
     };
   })
-  .controller('DashboardCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdBottomSheet, timeouts, appData, Registrants) {
+  .controller('DashboardCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdBottomSheet, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment) {
     var scanData = $stateParams.scanData,
         search = {
           category: "sortDate",
@@ -182,6 +192,9 @@
                   console.log(registrants);
                   $scope.data.count = registrants.length;
                   $scope.data.registrants = registrants;
+                  if (registrants.length === 0) {
+                    $rootScope.$broadcast('toast:show', "No search results");
+                  }
                 }, 
                 function(error) {
                   console.log(error);
@@ -194,12 +207,47 @@
                   console.log(registrants);
                   $scope.data.count = registrants.length;
                   $scope.data.registrants = registrants;
+                  if (registrants.length === 0) {
+                    $rootScope.$broadcast('toast:show', "No search results");
+                  }
                 }, 
                 function(error) {
                   console.log(error);
                 }
               ); 
             }
+          },
+          printReceipt = function(id) {
+            DS.find(
+              'receipt', 
+              'print', 
+              { 
+                params: { 
+                  registrantId: id
+                } 
+              }
+            ).then(
+              function(data) {
+                console.log(data);
+                $rootScope.$broadcast('toast:show', "Receipt printing");
+              }
+            );
+          },
+          printBadge = function(id) {
+           DS.find(
+              'badge', 
+              'print', 
+              { 
+                params: { 
+                  registrantId:  id
+                } 
+              }
+            ).then(
+              function(data) {
+                console.log(data);
+                $rootScope.$broadcast('toast:show', "Badge printing");
+              }
+            ); 
           };
     $scope.data = {
       edit: function(registrant, $event) {
@@ -207,6 +255,7 @@
       },
       searchVal: null,
       category: 'name',
+      checkedin: appData.checkedin,
       registrants: [],
       searchClick: function() {
         search.category = $scope.data.category;
@@ -243,15 +292,15 @@
                 icon: 'mode_edit' 
               },
               { 
-                id: 'makePayment',
-                name: 'Make Payment', 
-                icon: 'payment' 
-              },
-              { 
                 id: 'printBadge',
                 name: 'Print Badge', 
                 icon: 'print' 
               },
+              { 
+                id: 'printReceipt',
+                name: 'Print Receipt', 
+                icon: 'print' 
+              }
             ]
           }
         }).then(function(clickedItem) {
@@ -283,13 +332,73 @@
             ); 
           } else if (clickedItem.id === "edit") {
             $state.transitionTo('registrant', {id: registrant.id, registrant: registrant});
+          } else if (clickedItem.id === "printBadge") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            printBadge(registrant.registrantId);
+          } else if (clickedItem.id === "downloadBadge") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            DS.find(
+              'badge', 
+              'download', 
+              { 
+                params: { 
+                  registrantId: registrant.registrantId 
+                } 
+              }
+            ).then(
+              function(data) {
+                var pdf = convertDataToBinary.convert(data.pdf);
+                $mdDialog.show({
+                  controller: 'PdfDialogCtrl',
+                  templateUrl: '../templates/pdf-dialog.html',
+                  locals: {
+                    pdfData: pdf 
+                  }
+                })
+                .then(function(answer) {
+                  $scope.alert = 'You said the information was "' + answer + '".';
+                }, function() {
+                  $scope.alert = 'You cancelled the dialog.';
+                }); 
+              }
+            );
+          } else if (clickedItem.id === "printReceipt") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            printReceipt(registrant.registrantId);
+          } else if (clickedItem.id === "downloadReceipt") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            DS.find(
+              'receipt', 
+              'download', 
+              { 
+                params: { 
+                  registrantId: registrant.registrantId 
+                } 
+              }
+            ).then(
+              function(data) {
+                var pdf = convertDataToBinary.convert(data.pdf);
+                $mdDialog.show({
+                  controller: 'PdfDialogCtrl',
+                  templateUrl: '../templates/pdf-dialog.html',
+                  locals: {
+                    pdfData: pdf 
+                  }
+                })
+                .then(function(answer) {
+                  $scope.alert = 'You said the information was "' + answer + '".';
+                }, function() {
+                  $scope.alert = 'You cancelled the dialog.';
+                }); 
+              }
+            );
           }
         });
       },
       clearInput: function($event) {
         $scope.data.searchVal = null;
       },
-      count: 3
+      count: 0
     };
     
     
@@ -301,6 +410,13 @@
         find(scanData, 'confirmation');
       }
     }
+    
+    $rootScope.$on(
+      'updates:checkedin', 
+      function(event, data){
+        $scope.data.checkedin = parseInt(appData.checkedin, 10);
+      }
+    );
     
     $scope.$on(
       'barcode:data', 
@@ -316,15 +432,17 @@
     );
     
   })
-  .controller('RegistrantCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdToast, $animate, $mdBottomSheet ,timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment) {
+  .controller('RegistrantCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdToast, $animate, $mdBottomSheet, $log, $q, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment, Company, lodash) {
     var registrant = $stateParams.registrant,
-        printReceipt = function() {
+        siteId = ("site" in registrant && registrant.site !== null) ? registrant.site.siteId : null,
+        printReceipt = function(id) {
+          id = id || registrant.registrantId;
           DS.find(
             'receipt', 
             'print', 
             { 
               params: { 
-                registrantId: registrant.registrantId 
+                registrantId: id
               } 
             }
           ).then(
@@ -334,13 +452,14 @@
             }
           );
         },
-        printBadge = function() {
+        printBadge = function(id) {
+          id = id || registrant.registrantId;
          DS.find(
             'badge', 
             'print', 
             { 
               params: { 
-                registrantId: registrant.registrantId 
+                registrantId:  id
               } 
             }
           ).then(
@@ -349,9 +468,44 @@
               $rootScope.$broadcast('toast:show', "Badge printing");
             }
           ); 
+        },
+        querySearch = function(query) {
+          var deferred = $q.defer();
+          Company.findAll({search:query}, {cacheResponse: false}).then(
+            function(data) {
+              return deferred.resolve(data);
+            },
+            function(error) {
+              return deferred.reject(error);
+            }
+          );
+          return deferred.promise;
+        },
+        searchTextChange = function(text) {
+          $log.info('Text changed to ' + text);
+        },
+        selectedItemChange = function(item) {
+          if (typeof item !== "undefined") {
+            $log.info('Item changed to ' + item);
+            $scope.data.registrant.site = item;
+            /*jshint -W069 */
+            $scope.data.registrant.fields['siteId'] = item.siteId;
+            $scope.data.registrant.fields['address'] = item.street1;
+            $scope.data.registrant.fields['address2'] = item.street2;
+            $scope.data.registrant.fields['organization'] = item.company;
+            $scope.data.registrant.fields['city'] = item.city;
+            $scope.data.registrant.fields['zip'] = item.zipCode;
+            $scope.data.registrant.fields['state'] = Data.states_hash[item.state];
+          }
         };
     $scope.data = {
+      siteSearchText: null,
+      siteQuerySearch: querySearch,
+      siteSelectedItemChange: selectedItemChange,
+      siteSearchTextChange: searchTextChange,
+      siteSelected: siteId,
       registrant: registrant,
+      totalAmount: lodash.sumBy(registrant.transactions, "settleAmount"),
       updateRegistrant: function() {
        registrant.DSUpdate(
           { 
@@ -460,19 +614,29 @@
               if (data !== null) {
                 var payment = {
                   transaction: data,
-                  registrant: registrant
+                  registrant: registrant,
+                  type: "credit"
                 };
+                if (data.checkNumber !== null) {
+                  payment.type = "check"; 
+                }
                 Payment.create(payment).then(
                   function (transaction) {
                     console.log(transaction);
                     Registrants.refresh(registrant.registrantId).then(
                       function (registrant) {
-                        if (parseInt(transaction.responseCode, 10) === 1) {
-                          $rootScope.$broadcast('toast:show', "Credit Card was successfully charged");
+                        if (payment.type === "check") {
+                          $rootScope.$broadcast('toast:show', "Check recorded successfully");
                           printReceipt();
                           printBadge();
                         } else {
-                          $rootScope.$broadcast('toast:show', "Credit Card was declined: "+transaction.responseReasonDescription);
+                          if (parseInt(transaction.responseCode, 10) === 1) {
+                            $rootScope.$broadcast('toast:show', "Credit Card was successfully charged");
+                            printReceipt();
+                            printBadge();
+                          } else {
+                            $rootScope.$broadcast('toast:show', "Credit Card was declined: "+transaction.responseReasonDescription);
+                          }
                         }
                       }
                     );
@@ -482,7 +646,7 @@
             }, function() {
               $scope.alert = 'You cancelled the dialog.';
             }); 
-           } else if (clickedItem.id === "printBadge") {
+          } else if (clickedItem.id === "printBadge") {
             //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
             printBadge();
           } else if (clickedItem.id === "downloadBadge") {
@@ -583,7 +747,8 @@
           }
         }).then(function(clickedItem) {
           if (clickedItem.id === "checkin") {
-            lregistrant.DSUpdate(
+            Registrants.update(
+              lregistrant.registrantId,
               { 
                 type: "status",
                 event_id: lregistrant.eventId,
@@ -594,9 +759,14 @@
                   "attend": true
                 } 
               }
+            ).then(
+              function(reg) {
+                Registrants.refresh(registrant.registrantId);
+              }
             ); 
           } else if (clickedItem.id === "checkout") {
-            lregistrant.DSUpdate(
+            Registrants.update(
+              lregistrant.registrantId,
               { 
                 type: "status",
                 event_id: lregistrant.eventId,
@@ -607,9 +777,77 @@
                   "attend": false
                 } 
               }
+            ).then(
+              function(reg) {
+                Registrants.refresh(registrant.registrantId);
+              }
             ); 
           } else if (clickedItem.id === "edit") {
-            $state.transitionTo('registrant', {id: lregistrant.id, registrant: lregistrant});
+            Registrants.find(lregistrant.registrantId).then(
+              function(reg) {
+                $state.transitionTo('registrant', {id: reg.id, registrant: reg});
+              }
+            );
+          } else if (clickedItem.id === "printBadge") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            printBadge(lregistrant.registrantId);
+          } else if (clickedItem.id === "downloadBadge") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            DS.find(
+              'badge', 
+              'download', 
+              { 
+                params: { 
+                  registrantId: lregistrant.registrantId
+                } 
+              }
+            ).then(
+              function(data) {
+                //var pdf = convertDataToBinary.convert(data.pdf);
+                $mdDialog.show({
+                  controller: 'PdfDialogCtrl',
+                  templateUrl: '../templates/pdf-dialog.html',
+                  locals: {
+                    pdfData: data.pdf
+                  }
+                })
+                .then(function(answer) {
+                  $scope.alert = 'You said the information was "' + answer + '".';
+                }, function() {
+                  $scope.alert = 'You cancelled the dialog.';
+                }); 
+              }
+            );
+          } else if (clickedItem.id === "printReceipt") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            printReceipt(lregistrant.registrantId);
+          } else if (clickedItem.id === "downloadReceipt") {
+            //var test = Badge.update('download', {registrantId: registrant.registrantId}); 
+            DS.find(
+              'receipt', 
+              'download', 
+              { 
+                params: { 
+                  registrantId: lregistrant.registrantId 
+                } 
+              }
+            ).then(
+              function(data) {
+                //var pdf = convertDataToBinary.convert(data.pdf);
+                $mdDialog.show({
+                  controller: 'PdfDialogCtrl',
+                  templateUrl: '../templates/pdf-dialog.html',
+                  locals: {
+                    pdfData: data.pdf
+                  }
+                })
+                .then(function(answer) {
+                  $scope.alert = 'You said the information was "' + answer + '".';
+                }, function() {
+                  $scope.alert = 'You cancelled the dialog.';
+                }); 
+              }
+            );
           }
         });
       },
@@ -624,7 +862,8 @@
     };
   })
   .controller('PdfDialogCtrl', function($scope, pdfData, $mdDialog) {
-    $scope.pdfUrl = pdfData;
+    var currentBlob = new Blob([pdfData], {type: 'application/pdf'});
+    $scope.pdfUrl = URL.createObjectURL(currentBlob);
     $scope.onError = function(error) {
       // handle the error
       console.log(error);
@@ -637,6 +876,7 @@
       }
     };
     $scope.close = function() {
+      $scope.pdfUrl = null;
       $mdDialog.hide();
     };
     
@@ -649,16 +889,22 @@
       expirationDate: null,
       security: null,
       name: null,
-      check: null,
+      checkNumber: null,
       track: null,
-      swipeClick: function() {
-        $rootScope.$broadcast('magstripe:start');
-        $("#txtHidden").css({
-            position: 'absolute',
-            top: '-100px'
-        });
-        $("#txtHidden").show();
-        $("#txtHidden").focus();
+      swipeClick: function(evt) {
+        if (appData.cardSwipe) {
+          $rootScope.$broadcast('magstripe:stop');
+          evt.currentTarget.textContent = "Click to capture swipe";
+        } else {
+          evt.currentTarget.textContent = "Click to cancel swipe";
+          $rootScope.$broadcast('magstripe:start');
+          $("#txtHidden").css({
+              position: 'absolute',
+              top: '-100px'
+          });
+          $("#txtHidden").show();
+          $("#txtHidden").focus();
+        }
       },
       canSubmit: function() {
         var regex = /^[1-9]\d*(((,\d{3}){1})?(\.\d{0,2})?)$/;
@@ -754,7 +1000,7 @@
           event: event, 
           biller: $scope.data.selected
         };
-        $mdDialog.hide($scope.data.selected);
+        $mdDialog.hide(data);
       } else {
         $mdDialog.hide(null);
       }
@@ -763,11 +1009,29 @@
   })
   .controller('AddRegistrantCtrl', function ($scope, $rootScope, $stateParams, $state, $mdToast, appData, Registrants, Fields, Badge, convertDataToBinary, DS) {
     var event = $stateParams.event,
-        biller = $stateParams.biller;
+        biller = $stateParams.biller,
+        getFields = function() {
+          Fields.find(event.reg_type).then(
+            function(fields) {
+              $scope.data.fields = fields;
+              fields.forEach(
+                function(field) {
+                  if ($scope.data.company !== null && field.id in $scope.data.company) {
+                    $scope.data.registrant.fields[field.id] = $scope.data.company[field.id];
+                  }
+                }
+              );
+            },
+            function(error) {
+              console.log(error);
+            }
+          );
+        };
     $scope.data = {
       registrant: {
        fields: {} 
       },
+      company: null,
       fields: null,
       event: event,
       addRegistrant: function() {
@@ -787,13 +1051,20 @@
       }
     };
     
-    Fields.find(event.reg_type).then(
-      function(fields) {
-        $scope.data.fields = fields;
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
+    if (biller !== null) {
+      Registrants.findAll({category: 'confirmation', search: biller.biller.confirmation}, {bypassCache: true}).then(
+        function (registrants) {
+          $scope.data.company = registrants[0];
+          getFields();
+        }, 
+        function(error) {
+          console.log(error);
+        }
+      ); 
+    } else {
+     getFields(); 
+    }
+    
+    
   });
 }());

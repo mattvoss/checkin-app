@@ -1,10 +1,10 @@
-<md-dialog aria-label="Setttings">
+<md-dialog aria-label="Setttings" flex>
   <md-toolbar class="md-hue-1">
     <h2 class="md-toolbar-tools">
       <span>Settings</span>
     </h2>
   </md-toolbar>
-  <md-content class="sticky-container">
+  <md-content class="sticky-container" layout-padding>
     <div class="dialog-content">
       <div flex>
         <md-input-container>
@@ -19,11 +19,11 @@
   </md-content>
   <div class="md-actions" layout="row">
     <span flex></span>
-    <md-button ng-click="answer('not useful')">
+    <md-button ng-click="hide('cancel')">
       Cancel
     </md-button>
-    <md-button ng-click="answer('useful')" class="md-primary">
-      Done
+    <md-button ng-click="hide('update')" class="md-primary">
+      Update
     </md-button>
   </div>
 </md-dialog>

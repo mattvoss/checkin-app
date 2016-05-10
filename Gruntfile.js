@@ -5,24 +5,25 @@ module.exports = function(grunt) {
   // Load Grunt tasks declared in the package.json file
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
   var jsSrc = [
-        'lib/lodash/lodash.js',
+        'lib/lodash/dist/lodash.js',
         'lib/angular-ui-router/angular-ui-router.js',
         'lib/angular-animate/angular-animate.js',
         'lib/angular-aria/angular-aria.js',
         'lib/angular-material/angular-material.js',
         'lib/angular-moment/angular-moment.js',
-        'lib/angular-lodash/angular-lodash.js',
+        'lib/ng-lodash/ng-lodash.js',
         'lib/angular-material-icons/angular-material-icons.min.js',
         'lib/js-data/js-data.js',
         'lib/js-data-angular/js-data-angular.js',
         'lib/card/card.js',
         'lib/angular-pdf/angular-pdf.js',
         'lib/credit-card-track-parser/lib/credit_card_track_parser.js',
-        'lib/payment/payment.js'
+        'lib/payment/payment.js',
+        'vendors/socket.io.js'
       ],
       cssSrc = [
         'lib/angular-material/angular-material.css',
-        'css/app.css'
+        'src/css/app.css'
       ];
   // Project configuration.
   grunt.initConfig({
@@ -40,22 +41,22 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      all: ['Gruntfile.js', 'js/**/*.js']
+      all: ['Gruntfile.js', 'src/js/**/*.js']
     },
     uglify: {
       options: {
-        beautify: false,
-        mangle: true
+        beautify: true,
+        mangle: false
       },
       vendors: {
         files: {
-          'compiled/js/vendors.min.js': jsSrc
+          'app/js/vendors.min.js': jsSrc
         }
       },
       app: {
         files: {
-          'compiled/js/app.min.js': [
-            'js/**/*.js'
+          'app/js/app.min.js': [
+            'src/js/**/*.js'
           ]
         }
       }
@@ -63,7 +64,7 @@ module.exports = function(grunt) {
     cssmin: {
       combine: {
         files: {
-          'compiled/css/app.css': cssSrc
+          'app/css/app.css': cssSrc
         }
       }
     },
@@ -75,17 +76,17 @@ module.exports = function(grunt) {
       },
       css: {
         src: cssSrc,
-        dest: 'compiled/css/app.css',
+        dest: 'app/css/app.css',
       },
       app: {
         src: [
-          'js/**/*.js'
+          'src/js/**/*.js'
         ],
-        dest: 'compiled/js/app.min.js',
+        dest: 'app/js/app.min.js',
       },
       jsDev: {
         src: jsSrc,
-        dest: 'compiled/js/vendors.min.js',
+        dest: 'app/js/vendors.min.js',
       },
     },
     copy: {
@@ -95,11 +96,30 @@ module.exports = function(grunt) {
             expand: true,
             flatten: true,
             src: [
-              'templates/*.html'
+              'src/templates/*.html'
             ],
-            dest: 'compiled/templates',
+            dest: 'app/templates',
             filter: 'isFile'
-          }
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [
+              'src/*.js'
+            ],
+            dest: 'app',
+            filter: 'isFile'
+          },
+          {
+            expand: true,
+            flatten: true,
+            src: [
+              'lib/pdfjs-dist/*.js'
+            ],
+            dest: 'app/js',
+            filter: 'isFile'
+          },
+          
         ]
       }
     },
@@ -112,14 +132,14 @@ module.exports = function(grunt) {
         },
       },
       scripts: {
-        files: ['js/**/*.js'],
+        files: ['src/**/*.js'],
         tasks: ['jshint:all', 'concat:app'],
         options: {
           spawn: true,
         },
       },
       css: {
-        files: ['css/*.css'],
+        files: ['src/css/*.css'],
         tasks: ['concat:css'],
         options: {
           spawn: true,
@@ -131,7 +151,7 @@ module.exports = function(grunt) {
             stderr: false
         },
         target: {
-            command: 'electron .'
+            command: 'electron compiled/'
         }
     },
     'node-inspector': {
@@ -142,8 +162,24 @@ module.exports = function(grunt) {
           platforms: ['win'],
           buildDir: './builds', // Where the build version of my node-webkit app is saved
       },
-      src: ['./compiled/**/*'] // Your node-webkit app
+      src: ['./app/**/*'] // Your node-webkit app
     },
+    json: {
+      data: {
+        options: {
+          namespace: 'Data',
+          includePath: true,
+          processName: function(filename) {
+            var _name = filename.split("/"),
+                len = _name.length-1,
+                name = _name[len].split(".")[0];
+            return name.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+          }
+        },
+        src: ['src/data/**/*.json'],
+        dest: 'app/js/json.js'
+      }
+    }
   });
 
   grunt.registerTask('build', [
@@ -152,15 +188,15 @@ module.exports = function(grunt) {
     'uglify',
     'cssmin',
     'copy',
-    'nodewebkit'
+    'json:data'
   ]);
 
-  grunt.registerTask('run', [
+  grunt.registerTask('dev', [
     'bower:install',
     'jshint:all',
     'concat',
     'copy',
-    'shell'
+    'json:data',
   ]);
 
   grunt.event.on('watch', function(action, filepath, target) {

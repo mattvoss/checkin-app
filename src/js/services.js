@@ -61,19 +61,25 @@
         idAttribute: 'id'
       });
     })
+    .factory('Company', function(DS) {
+      return DS.defineResource({
+        name: 'company',
+        endpoint: '/company',
+        idAttribute: 'id'
+      });
+    })
     .factory('Payment', function(DS) {
       return DS.defineResource('payment');
     })
     .factory('convertDataToBinary', function() {
       var self = this;
       self.BASE64_MARKER = ';base64,';
-
       self.convert = function(data) {
         //var base64Index = dataURI.indexOf(self.BASE64_MARKER) + self.BASE64_MARKER.length;
         //var base64 = dataURI.substring(base64Index);
         var raw = window.atob(data),
             rawLength = raw.length,
-            array = new Uint8Array(new ArrayBuffer(rawLength));
+            array = new Uint8Array(rawLength);
 
         for(var i = 0; i < rawLength; i++) {
           array[i] = raw.charCodeAt(i);

@@ -19,20 +19,21 @@
     </script>
     <script src="../js/pdf.js"></script>
     <script src="../js/vendors.min.js"></script>
+    <script src="../js/json.js"></script>
     <script src="../js/app.min.js"></script>
 </head>
 <body layout="column" ng-controller="MainCtrl">
   <md-content flex layout="column">
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Settings" ng-click="data.goHome($event)" ng-show="data.showHome">
+        <md-button aria-label="Home" ng-click="data.goHome($event)" ng-show="data.showHome">
           <md-icon icon="home" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
         </md-button>
         <h2>
           <span>CHECK IN</span>
         </h2>
         <span flex></span>
-        <md-button class="md-icon-button" aria-label="Settings" ng-click="showSettings($event)">
+        <md-button aria-label="Settings" ng-click="showSettings($event)">
           <md-icon icon="settings" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
         </md-button>
       </div>

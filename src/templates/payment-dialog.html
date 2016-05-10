@@ -14,7 +14,7 @@
         <md-tab>
           <md-tab-label>Swipe</md-tab-label>
           <md-tab-body>
-            <md-button class="md-raised md-primary md-hue-2" ng-disabled="data.canSubmit()" ng-click="data.swipeClick()">Click to capture swipe</md-button>
+            <md-button class="md-raised md-primary md-hue-2" ng-disabled="data.canSubmit()" ng-click="data.swipeClick($event)">Click to capture swipe</md-button>
             <input type="text" id="txtHidden" style="opacity: 0;" />
           </md-tab-body>
         </md-tab>
@@ -47,7 +47,7 @@
           <md-tab-body>
             <md-input-container flex>
               <label>Check Number</label>
-              <input ng-model="data.check">
+              <input ng-model="data.checkNumber">
             </md-input-container>
           </md-tab-body>
         </md-tab>

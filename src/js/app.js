@@ -14,21 +14,22 @@
         'CheckinApp.services', 
         'CheckinApp.directives',
         'pdf',
-        'mdThemeColors'
+        'mdThemeColors',
+        'ngLodash'
       ]
     )
     .value('timeouts', {})
     .value('appData', {
       isReview: false,
       cardSwipe: false,
-      magStripe: []
+      magStripe: [],
+      checkedin: 0
     })
     .constant('angularMomentConfig', {
-      preprocess: 'utc',
       timezone: 'America/Chicago'
     })
     .run(
-      function($rootScope, $state, serialport, server, appData) {
+      function($rootScope, $state, serialport, server, appData, DS) {
         $rootScope.$on('serialport:ready', 
           function(event, data){
             serialport.open();
@@ -56,7 +57,7 @@
         
         $rootScope.$on('server:ready', 
           function(event, data){
-          
+            DS.defaults.basePath = data;
           }
         );
         
@@ -94,8 +95,22 @@
         }
         
         if (server.get() !== null) {
-          //Restangular.setBaseUrl(server.get());
+          DS.defaults.basePath = server.get();
+          appData.socket = io.connect(server.get().replace("/api", ""));
           
+          appData.socket.on('connect', function(data){
+            appData.socket.emit('ready');
+            console.log(data);
+          });
+          appData.socket.on('talk', function(data){
+            if (data.objectType === "updates") {
+              console.log(data);
+              if (data.modType === "checkedIn") {
+                appData.checkedin = data.objectId;
+                $rootScope.$broadcast('updates:checkedin', data.objectId);
+              }
+            }
+          });
         } else {
           $rootScope.$broadcast('settings:none');
         }
@@ -103,7 +118,8 @@
       }
     )
     .config(function($stateProvider, $urlRouterProvider, $mdThemingProvider, DSProvider) {
-      DSProvider.defaults.basePath = 'http://localhost:3001/api';
+      var url = window.localStorage.getItem("serverUrl"); 
+      DSProvider.defaults.basePath = (url !== null) ? url : 'http://localhost:3001/api';
       $stateProvider
         .state('dashboard', {
           url: "/dashboard",
