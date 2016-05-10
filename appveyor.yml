@@ -1,11 +1,6 @@
 platform:
   - x64
 
-branches:
-  only:
-  - master
-skip_non_tags: true
-
 cache:
   - node_modules
   - '%APPDATA%\npm-cache'
@@ -28,9 +23,10 @@ build_script:
   - node --version
   - npm --version
   - npm run dist
+  - dir %APPVEYOR_BUILD_FOLDER%\dist
   
 artifacts:
-  - path: dist\*
+  - path: dist/*
     name: WindowsInstall
 
 test: off
