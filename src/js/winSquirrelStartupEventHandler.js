@@ -1,5 +1,5 @@
 var app = require("electron");
-var spawn  = require("child_process");
+var spawn  = require("child_process").spawn;
 var path = require("path");
 var exports = module.exports = {};
 
