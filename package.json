@@ -18,6 +18,7 @@
     "pack": "npm run compile && build",
     "dist": "npm run compile && build",
     "release": "npm run compile && build",
+    "dist:osx": "build --platform osx",
     "dist:win64": "build --platform win32 --arch x64"
   },
   "devDependencies": {

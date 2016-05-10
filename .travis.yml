@@ -1,52 +1,56 @@
 language: node_js
 os:
-  - osx
-  - linux
-
+- osx
+- linux
 osx_image: xcode7
-
 dist: trusty
 sudo: required
-
-env:
-  - NODE_VERSION=4
-  - NODE_VERSION=6
-
+node_js:
+- '4'
+- '6'
 cache:
   apt: true
   bundler: true
   directories:
-    - node_modules
-    - test/testApp/node_modules
-    - $HOME/.electron
-    - $HOME/.cache/fpm
-
+  - node_modules
+  - test/testApp/node_modules
+  - "$HOME/.electron"
+  - "$HOME/.cache/fpm"
 addons:
   apt:
     sources:
-      - mono
+    - mono
     packages:
-      - icnsutils
-      - graphicsmagick
-      - mono-devel
-
+    - icnsutils
+    - graphicsmagick
+    - mono-devel
+    - xz-utils
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git lfs pull; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-linux-amd64-1.2.0.tar.gz | tar -xz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git-lfs-1.2.0/git-lfs pull; fi
-
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git lfs pull; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install fpm; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-linux-amd64-1.2.0.tar.gz
+  | tar -xz; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git-lfs-1.2.0/git-lfs pull; fi
 install:
 - nvm install 6
 - npm install npm -g
 - npm install
-- npm install electron-builder@next # force install next version to test electron-builder
+- npm install electron-builder@next
 - npm prune
-
 script:
 - npm run dist
-
+after_success:
+- cd dist/
+- tar -czf package.tgz checkin-app-darwin-x64
+- export SSHPASS=$DEPLOY_PASS
+- sshpass -e scp package.tgz $DEPLOY_HOST
 branches:
   except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+  - "/^v\\d+\\.\\d+\\.\\d+$/"
+env:
+  global:
+    -secure: "fCXFf7HXkYsmF8XXZt9Rgw10B9lAOsy1qBQnXr1qiMm6gSJDWk0uvp8Ll0TliEnatELjztduA54Xo1d2Jy1FvMdnQpCC5cSmccddPMNYvn8EXQamMvXQkT3CJRnsRm2ADppE5Zsf3L9syAbm1GS1BbjInRehICQFsHr7ssYP86g="
+    -secure: "CjrFyq+2xP7rCQ3v5Qq46uHDSoEJRRaAWkqCRK5YD5Tqcd9GjnZqkf1i+Wug9ryj/CwhKkq8DUtov030F/z9Hv86zFDxdFe+FCFDmL+K9oES6LhBrvkISiz7NgJNeccsVpT7OyJGtnLuh/19Rq2gGp13ZId5WNeDmCuR8N9pLpA="
+    
