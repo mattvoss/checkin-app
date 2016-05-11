@@ -13,3 +13,4 @@ dist/
 cache/
 bower_components/
 lib/
+npm-debug.log

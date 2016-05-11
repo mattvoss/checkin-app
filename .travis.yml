@@ -29,8 +29,6 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git lfs pull; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb;
-  fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install fpm; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-linux-amd64-1.2.0.tar.gz
   | tar -xz; fi
@@ -49,7 +47,7 @@ after_success:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar -czf osx.$DATE.tgz checkin-app-darwin-x64;
   fi
 - ls -alt
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -u $DEPLOY_USER:$DEPLOY_PASS -T test.txt  https://dav.box.com/dav/osx-builds/osx.$DATE.tgz;
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -vv -u $DEPLOY_USER:$DEPLOY_PASS -T osx.$DATE.tgz  https://dav.box.com/dav/osx-builds/osx.$DATE.tgz ;
   fi
 branches:
   except:
