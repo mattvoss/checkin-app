@@ -27,7 +27,7 @@ addons:
     - xz-utils
     - p7zip-full
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ip addr show eth0; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ifconfig -a; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git lfs pull; fi
