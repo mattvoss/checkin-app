@@ -48,11 +48,10 @@ script:
 after_success:
 - cd dist/
 - echo $DATE
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar -czf osx.$DATE.tgz checkin-app-darwin-x64;
-  fi
+- echo $DEPLOY_HOST
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar -czf osx.$DATE.tgz checkin-app-darwin-x64; fi
 - ls -alt
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sshpass -p $DEPLOY_PASS scp osx.$DATE.tgz
-  $DEPLOY_HOST; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sshpass -p $DEPLOY_PASS scp osx.$DATE.tgz $DEPLOY_HOST; fi
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
@@ -60,4 +59,4 @@ env:
   global:
   - secure: cVjJZ4mNUSYufMtrxVhgyMPltprssTz8v4amM3b9WETAWGIW4EzBlyv9W31G+etKhJt0TkEiROsARgnxcvu6L7JEHQduPcP3c3OyX+6AgIyWKVgphPnsJaXhILzHHMF8hXogIY51L049DohDH9RMIFilQefJM15ZNgnt0zDiZcs=
   - secure: EJxIKZ8KtSblxU0LWsyv04VJ5kfa21LBqSaGs6C9rf7muDVt21e/saUqudnVACbxSqW8jpNym4RNzjnhMYLNCTi/Vw2ymYKcBCt0wnw8U7pUercxyEywbzhgjdrQBJId2A1UMfVWjsFNUXmvU9zlsSlkbD9/cf4fKnfMjttgkWE=
-  - DATE=date +%s
+  - DATE=$(date +%s)
