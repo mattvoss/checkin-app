@@ -38,19 +38,17 @@ install:
 - nvm install 6
 - npm install npm -g
 - npm install
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm install 7zip-bin-linux; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm install -g 7zip-bin; fi
 - npm install electron-builder@next
 - npm prune
 script:
 - npm run dist
 after_success:
 - cd dist/
-- echo $DATE
-- echo $DEPLOY_HOST
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar -czf osx.$DATE.tgz checkin-app-darwin-x64; fi
 - ls -alt
 - export SSHPASS=$DEPLOY_PASS
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sshpass -e scp -v osx.$DATE.tgz $DEPLOY_HOST; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sshpass -e scp -o Cipher=aes256-ctr -v osx.$DATE.tgz $DEPLOY_HOST; fi
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
