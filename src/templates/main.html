@@ -24,8 +24,9 @@
     <md-list>
       <md-list-item ng-repeat="registrant in data.registrants" class="md-3-line" md-ink-ripple layout="row">
         <div flex="25">
-          <md-icon ng-if="registrant.attend" icon="stars" size="48" style="width: 48px; height: 48px; fill: green;"></md-icon>
-          <md-icon ng-if="!registrant.attend" icon="error" size="48" style="width: 48px; height: 48px; fill: red;"></md-icon>
+          <md-icon ng-if="registrant.attend" icon="stars" size="48" style="width: 48px; height: 48px; fill: #4CAF50;"></md-icon>
+          <md-icon ng-if="!registrant.attend" icon="error" size="48" style="width: 48px; height: 48px; fill: #f44336;"></md-icon>
+          <md-icon ng-if="registrant.speaker" icon="volume_up" size="48" style="width: 48px; height: 48px; fill: #e57373;"></md-icon>
         </div>
         
         <div flex="60">

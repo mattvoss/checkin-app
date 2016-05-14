@@ -173,7 +173,7 @@
       }
     };
   })
-  .controller('DashboardCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdBottomSheet, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment) {
+  .controller('DashboardCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdBottomSheet, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment, ipcRenderer) {
     var scanData = $stateParams.scanData,
         search = {
           category: "sortDate",
@@ -348,6 +348,7 @@
             ).then(
               function(data) {
                 var pdf = convertDataToBinary.convert(data.pdf);
+                ipcRenderer.send('new-window', 'downloadBadge');
                 $mdDialog.show({
                   controller: 'PdfDialogCtrl',
                   templateUrl: '../templates/pdf-dialog.html',
@@ -406,6 +407,8 @@
       if (scanData.indexOf("|") > -1) {
         var id = scanData.split("|")[0];
         find(id, 'registrantid');
+      } else if(scanData.length === 6) {
+        find(scanData, 'registrantid');
       } else {
         find(scanData, 'confirmation');
       }
@@ -432,7 +435,7 @@
     );
     
   })
-  .controller('RegistrantCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdToast, $animate, $mdBottomSheet, $log, $q, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment, Company, lodash) {
+  .controller('RegistrantCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdToast, $animate, $mdBottomSheet, $log, $q, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment, Company, lodash, ipcRenderer) {
     var registrant = $stateParams.registrant,
         siteId = ("site" in registrant && registrant.site !== null) ? registrant.site.siteId : null,
         printReceipt = function(id) {
@@ -661,7 +664,9 @@
               }
             ).then(
               function(data) {
-                var pdf = convertDataToBinary.convert(data.pdf);
+                //var pdf = convertDataToBinary.convert(data.pdf);
+                ipcRenderer.send('new-window', data.pdf);
+                /*
                 $mdDialog.show({
                   controller: 'PdfDialogCtrl',
                   templateUrl: '../templates/pdf-dialog.html',
@@ -674,6 +679,7 @@
                 }, function() {
                   $scope.alert = 'You cancelled the dialog.';
                 }); 
+                */
               }
             );
           } else if (clickedItem.id === "printReceipt") {
@@ -691,6 +697,7 @@
               }
             ).then(
               function(data) {
+                /*
                 var pdf = convertDataToBinary.convert(data.pdf);
                 $mdDialog.show({
                   controller: 'PdfDialogCtrl',
@@ -704,6 +711,8 @@
                 }, function() {
                   $scope.alert = 'You cancelled the dialog.';
                 }); 
+                */
+                ipcRenderer.send('new-window', data.pdf);
               }
             );
           }
@@ -804,6 +813,8 @@
             ).then(
               function(data) {
                 //var pdf = convertDataToBinary.convert(data.pdf);
+                //ipcRenderer.send('new-window', 'downloadBadge');
+                /*
                 $mdDialog.show({
                   controller: 'PdfDialogCtrl',
                   templateUrl: '../templates/pdf-dialog.html',
@@ -815,7 +826,9 @@
                   $scope.alert = 'You said the information was "' + answer + '".';
                 }, function() {
                   $scope.alert = 'You cancelled the dialog.';
-                }); 
+                });
+                */
+                ipcRenderer.send('new-window', data.pdf); 
               }
             );
           } else if (clickedItem.id === "printReceipt") {
@@ -834,6 +847,7 @@
             ).then(
               function(data) {
                 //var pdf = convertDataToBinary.convert(data.pdf);
+                /*
                 $mdDialog.show({
                   controller: 'PdfDialogCtrl',
                   templateUrl: '../templates/pdf-dialog.html',
@@ -845,7 +859,9 @@
                   $scope.alert = 'You said the information was "' + answer + '".';
                 }, function() {
                   $scope.alert = 'You cancelled the dialog.';
-                }); 
+                });
+                */
+                ipcRenderer.send('new-window', data.pdf); 
               }
             );
           }

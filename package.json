@@ -7,8 +7,9 @@
   },
   "scripts": {
     "postinstall": "install-app-deps",
-    "dev": "npm run compile:dev && electron ./app",
+    "dev": "npm run compile:dev && npm run run:dev",
     "run": "npm run compile && electron ./app",
+    "run:dev": "electron app",
     "start": "npm install && npm run compile && electron ./app",
     "clean": "rimraf dist",
     "clean:osx": "rimraf dist/Checkin-darwin-x64",
@@ -22,6 +23,9 @@
     "dist:win64": "build --platform win32 --arch x64"
   },
   "devDependencies": {
+    "devtron": "^1.0.1",
+    "electron-builder": "next",
+    "electron-prebuilt": "1.0.1",
     "grunt": "latest",
     "grunt-bower-task": "latest",
     "grunt-contrib-concat": "latest",
@@ -38,8 +42,6 @@
     "grunt-node-inspector": "latest",
     "grunt-shell": "^1.1.2",
     "matchdep": "latest",
-    "electron-builder": "next",
-    "electron-prebuilt": "1.0.1",
     "rimraf": "^2.5.2"
   }
 }

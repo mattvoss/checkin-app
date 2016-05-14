@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         'lib/angular-pdf/angular-pdf.js',
         'lib/credit-card-track-parser/lib/credit_card_track_parser.js',
         'lib/payment/payment.js',
+        'lib/angular-electron/angular-electron.js',
         'vendors/socket.io.js'
       ],
       cssSrc = [

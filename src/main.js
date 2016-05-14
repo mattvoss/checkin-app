@@ -1,9 +1,12 @@
 if(require('electron-squirrel-startup')) return;
+const qs = require ("querystring");
 const electron = require('electron');
 const app = electron.app;
+const blobUtil = require ("blob-util");
 const BrowserWindow = electron.BrowserWindow;
 const windowStateKeeper = require('electron-window-state');
 const package = require('./package.json');
+const ipcMain = electron.ipcMain;
 
 // Report crashes to our server.
 //require('crash-reporter').start();
@@ -11,6 +14,10 @@ const package = require('./package.json');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
 let mainWindow = null;
+ipcMain.on('new-window', function(event, arg) {
+  //console.log("new-window", arg);  // prints args
+  openNewWindow(arg);
+});
 function createWindow () {
   let mainWindowState = windowStateKeeper({
     defaultWidth: package.window.width,
@@ -37,6 +44,22 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+}
+
+function openNewWindow(pdf) {
+  let NewWindow = electron.BrowserWindow;
+  const pdfURL = "http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf";
+  //var url = blobUtil.createObjectURL(pdf);
+
+
+  var win = new NewWindow({ width: 800, height: 600, show: false });
+  win.on('closed', function() {
+    win = null;
+  });
+
+  win.loadURL('file://' + __dirname + '/web/viewer.html?file=' + pdf);
+  win.show();
+  //win.webContents.openDevTools();
 }
 
 // Quit when all windows are closed.

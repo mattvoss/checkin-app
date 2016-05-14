@@ -6,8 +6,8 @@
         <md-icon ng-if="data.registrant.attend" aria-label="Checked In" icon="stars" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
         <md-icon ng-if="!data.registrant.attend" aria-label="Checked Out" icon="error" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
         <md-icon ng-if="data.registrant.paid" aria-label="Paid" icon="attach_money" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
-      
-      <md-button aria-label="More" ng-click="data.showSheet($event, data.registrant)">
+        <md-icon ng-if="data.registrant.speaker" aria-label="Speaker" icon="volume_up" size="36" style="width: 36px; height: 36px; fill: white;"></md-icon>
+        <md-button aria-label="More" ng-click="data.showSheet($event, data.registrant)">
         <md-icon icon="more_vert" style="width: 36px; height: 36px; fill: white;" size="36"></md-icon>
       </md-button>
     </div>

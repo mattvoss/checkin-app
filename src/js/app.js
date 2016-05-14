@@ -15,7 +15,8 @@
         'CheckinApp.directives',
         'pdf',
         'mdThemeColors',
-        'ngLodash'
+        'ngLodash',
+        'angular-electron'
       ]
     )
     .value('timeouts', {})
