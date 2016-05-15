@@ -27,7 +27,7 @@
     "blob-util": "^1.2.1",
     "card-swipe": "mattvoss/card-swipe",
     "electron-squirrel-startup": "^0.1.4",
-    "electron-window-state": "^2.1.0",
+    "electron-window-state": "^3.0.3",
     "handlebars": "^3.0.1",
     "hexy": "^0.2.7",
     "jquery": "^2.1.4",
