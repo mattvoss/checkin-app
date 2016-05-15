@@ -9,12 +9,12 @@
     <form flex name="userForm">
       <div ng-repeat="field in data.fields" layout="column" layout-padding>
         <div ng-switch="field.type">
-          <md-input-container ng-switch-when="Text">
+          <md-input-container ng-switch-when="Text" class="md-block">
             <label>{{field.title}}</label>
             <input ng-model="data.registrant.fields[field.id]" \>
           </md-input-container>
           <div ng-switch-when="Select">
-            <md-input-container ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak>
+            <md-input-container ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak class="md-block"> 
               <label>{{field.title}}</label>
               <md-select ng-model="data.registrant.fields[field.id]" placeholder="Select an option">
                 <md-option ng-value="opt" ng-repeat="opt in field.options">{{ opt }}</md-option>
