@@ -18,7 +18,8 @@
     "credit-card-track-parser": "mattvoss/credit_card_track_parser",
     "payment": "~0.0.6",
     "ng-lodash": "^0.4.0",
-    "angular-electron": "^0.2.1"
+    "angular-electron": "^0.2.1",
+    "angular-ui-mask": "^1.8.3"
   },
   "resolutions": {
     "angular": "1.5.5",

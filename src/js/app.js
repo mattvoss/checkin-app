@@ -16,7 +16,8 @@
         'pdf',
         'mdThemeColors',
         'ngLodash',
-        'angular-electron'
+        'angular-electron',
+        'ui.mask'
       ]
     )
     .value('timeouts', {})

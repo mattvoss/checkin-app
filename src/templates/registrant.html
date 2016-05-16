@@ -22,7 +22,10 @@
               <div ng-switch="data.registrant.schema[field.id].type">
                 <md-input-container ng-switch-when="Text" class="md-block">
                   <label>{{data.registrant.schema[field.id].title}}</label>
-                  <input ng-model="data.registrant.fields[field.id]" \>
+                  <div ng-switch="field.id">
+                    <input ng-switch-when="phone" ng-model="data.registrant.fields[field.id]" ui-mask="(999) 999-9999"  ui-mask-placeholder ui-mask-placeholder-char="_" \>
+                    <input ng-switch-default ng-model="data.registrant.fields[field.id]" \>
+                  </div>
                 </md-input-container>
                 <div ng-switch-when="Select">
                   <md-input-container class="md-block" ng-class="{'md-input-has-value': data.registrant.fields[field.id].length}" ng-cloak>
