@@ -262,6 +262,34 @@
         search.search = $scope.data.searchVal;
         find();
       },
+      checkout: function($event, registrant) {
+        registrant.DSUpdate(
+          { 
+            type: "status",
+            event_id: registrant.eventId,
+            groupMemberId: parseInt(registrant.groupMemberId, 10),
+            registrantId: registrant.registrantId,
+            groupUserId: parseInt(registrant.groupUserId, 10),
+            fields: {
+              "attend": false
+            } 
+          }
+        ); 
+      },
+      checkin: function($event, registrant) {
+        registrant.DSUpdate(
+          { 
+            type: "status",
+            event_id: registrant.eventId,
+            groupMemberId: parseInt(registrant.groupMemberId, 10),
+            registrantId: registrant.registrantId,
+            groupUserId: parseInt(registrant.groupUserId, 10),
+            fields: {
+              "attend": true
+            } 
+          }
+        ); 
+      },
       showSheet: function($event, registrant) {
         $mdBottomSheet.show({
           templateUrl: '../templates/sheet-actions.html',

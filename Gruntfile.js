@@ -21,7 +21,7 @@ module.exports = function(grunt) {
         'lib/payment/payment.js',
         'lib/angular-ui-mask/mask.js',
         'lib/angular-electron/angular-electron.js',
-        'vendors/socket.io.js'
+        'lib/socket.io-client/socket.io.js'
       ],
       cssSrc = [
         'lib/angular-material/angular-material.css',

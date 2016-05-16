@@ -8,9 +8,9 @@
   "scripts": {
     "postinstall": "install-app-deps",
     "dev": "npm run compile:dev && npm run run:dev",
-    "run": "npm run compile && electron ./app",
-    "run:dev": "electron app",
-    "start": "npm install && npm run compile && electron ./app",
+    "run": "npm run compile && NODE_ENV=production electron ./app",
+    "run:dev": "NODE_ENV=development electron app",
+    "start": "npm install && npm run compile && NODE_ENV=production electron ./app",
     "clean": "rimraf dist",
     "clean:osx": "rimraf dist/Checkin-darwin-x64",
     "clean:win": "rimraf dist/win",
