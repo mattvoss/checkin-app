@@ -25,7 +25,8 @@
       isReview: false,
       cardSwipe: false,
       magStripe: [],
-      checkedin: 0
+      checkedin: 0,
+      priorSearch: null
     })
     .constant('angularMomentConfig', {
       timezone: 'America/Chicago'
@@ -101,6 +102,11 @@
           appData.socket = io.connect(server.get().replace("/api", ""));
           
           appData.socket.on('connect', function(data){
+            appData.socket.emit('ready');
+            console.log(data);
+          });
+          appData.socket.on('reconnect', function(data){
+            console.log("Reconnected");
             appData.socket.emit('ready');
             console.log(data);
           });

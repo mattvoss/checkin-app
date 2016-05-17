@@ -182,6 +182,12 @@
           limit: 25
         },
         find = function(id, type) {
+          appData.priorSearch = {
+            category: search.category,
+            type: type,
+            search: search.search,
+            id: id
+          };
           type = type || 'other';
             if (type !== 'other') {
               search.category = type;
@@ -461,6 +467,20 @@
         }
       }
     );
+    
+    if (appData.priorSearch) {
+      if (appData.priorSearch.type) {
+        find(appData.priorSearch.id, appData.priorSearch.type);
+      } else {
+        search = {
+          category: appData.priorSearch.category,
+          search: appData.priorSearch.search,
+          page: 0,
+          limit: 25
+        };
+        find();
+      }
+    }
     
   })
   .controller('RegistrantCtrl', function ($scope, $rootScope, $stateParams, $state, $mdDialog, $mdToast, $animate, $mdBottomSheet, $log, $q, timeouts, appData, Registrants, Badge, convertDataToBinary, DS, Receipt, Payment, Company, lodash, ipcRenderer) {

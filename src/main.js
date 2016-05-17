@@ -7,6 +7,19 @@ const BrowserWindow = electron.BrowserWindow;
 const windowStateKeeper = require('electron-window-state');
 const package = require('./package.json');
 const ipcMain = electron.ipcMain;
+//const autoUpdater = require('auto-updater');
+const appVersion = package.version;
+const os = require('os').platform();
+
+var updateFeed = 'http://192.168.2.14:8082/updates/latest';
+
+if (process.env.NODE_ENV !== 'development') {
+  updateFeed = os === 'darwin' ?
+    'https://mysite.com/updates/latest' :
+    'http://download.mysite.com/releases/win32';
+}
+
+//autoUpdater.setFeedURL(updateFeed + '?v=' + appVersion);
 
 // Report crashes to our server.
 //require('crash-reporter').start();
