@@ -91,15 +91,15 @@
     })
     .factory('serialport', function($rootScope, $q, appData) {
       var self = this;
-      self.serialport = require('serialport');
-      self.SerialPort = self.serialport.SerialPort;
+      self.SerialPort = require('serialport');
+      //self.SerialPort = self.serialport.SerialPort;
       
       self.open = function(port) {
         port = port || self.getPort();
         var sp = new self.SerialPort(
               port, 
               {
-                parser: self.serialport.parsers.readline("\n")
+                parser: self.SerialPort.parsers.readline("\n")
               }
             );
 
@@ -111,14 +111,18 @@
       self.listPorts = function() {
         var ports = [],
             deferred = $q.defer();
-        self.serialport.list(
+        self.SerialPort.list(
           function (error, results) {
+            console.log('listPorts', error, results);
             if (error) {
               return deferred.reject(error);
             } else {
               for (var i = 0; i < results.length; i++) {
                 var item = results[i];
-                ports.push({name: item.manufacturer, device: item.comName, pnpId: item.pnpId});
+                if (item.manufacturer) {
+                  var name = (item.manufacturer) ? item.manufacturer : item.comName;
+                  ports.push({name: name, device: item.comName, pnpId: item.pnpId});
+                }
               }
               return deferred.resolve(ports);
             }
