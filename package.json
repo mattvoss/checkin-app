@@ -2,10 +2,13 @@
   "version": "0.2.1",
   "private": true,
   "build": {
-    "app-bundle-id": "xyz.vosswerks.checkin",
-    "app-category-type": "public.app-category.productivity"
+    "appId": "xyz.vosswerks.checkin",
+    "mac": {
+      "category": "public.app-category.productivity"
+    }
   },
   "scripts": {
+    "install": "electron-rebuild",
     "postinstall": "install-app-deps",
     "dev": "npm run compile:dev && npm run run:dev",
     "run": "npm run compile && NODE_ENV=production electron ./app",
@@ -24,8 +27,9 @@
   },
   "devDependencies": {
     "devtron": "^1.0.1",
-    "electron-builder": "next",
-    "electron-prebuilt": "1.0.1",
+    "electron-builder": "17.1.1",
+    "electron": "1.6.6",
+    "electron-rebuild": "^1.5.7",
     "grunt": "latest",
     "grunt-bower-task": "latest",
     "grunt-contrib-concat": "latest",
@@ -43,5 +47,8 @@
     "grunt-shell": "^1.1.2",
     "matchdep": "latest",
     "rimraf": "^2.5.2"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
   }
 }
