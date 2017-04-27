@@ -1,42 +1,77 @@
-<div layout="column" layout flex layout-fill>
-  <md-content layout-padding layout="row" style="min-height: 90px;">
-    <div flex="33" layout-align='start center'>
-      <md-select layout-fill placeholder="Pick" ng-model="data.category" flex style="margin-top: 0.5em;">
+<div flex=""
+     layout=""
+     layout-fill="">
+  <md-content layout="row"
+              layout-padding=""
+              style="min-height: 90px;">
+    <div flex="33"
+         layout-align='start center'>
+      <md-select flex=""
+                 layout-fill=""
+                 ng-model="data.category"
+                 placeholder="Pick"
+                 style="margin-top: -1.55em;">
         <md-option value="name">Name</md-option>
         <md-option value="company">Company</md-option>
         <md-option value="confirmation">Confirmation Number</md-option>
         <md-option value="registrantid">Registrant ID</md-option>
       </md-select>
     </div>
-    <div flex="50" layout-align='start center'>
-      <md-input-container layout-fill style="margin-top: 0.35em;">
-        <input type="text" ng-model="data.searchVal" aria-label="search" ng-keyup="$event.keyCode == 13 && data.searchClick($event)" />
-        <md-icon icon="highlight_remove" ng-show="data.searchVal" style="right: 2px; color: rgba(0,0,0,0.24); left: inherit;" ng-click="data.clearInput($event)"></md-icon>
+    <div flex="50"
+         layout-align='start center'>
+      <md-input-container layout-fill=""
+                          style="margin-top: 0.35em;">
+        <input aria-label="search"
+               ng-keyup="$event.keyCode == 13 && data.searchClick($event)"
+               ng-model="data.searchVal"
+               type="text" />
+        <md-icon icon="highlight_remove"
+                 ng-click="data.clearInput($event)"
+                 ng-show="data.searchVal"
+                 style="right: 2px; color: rgba(0,0,0,0.24); left: inherit;"></md-icon>
       </md-input-container>
     </div>
-    <div flex>
-      <md-button aria-label="Search" ng-click="data.searchClick($event)">
+    <div flex="">
+      <md-button aria-label="Search"
+                 ng-click="data.searchClick($event)">
         <md-icon icon="search"></md-icon>
       </md-button>
     </div>
   </md-content>
-  <md-content layout="column" flex>
+  <md-content flex=""
+              layout="column">
     <md-list>
-      <md-list-item ng-repeat="registrant in data.registrants" class="md-3-line" md-ink-ripple layout="row">
+      <md-list-item class="md-3-line"
+                    layout="row"
+                    md-ink-ripple=""
+                    ng-repeat="registrant in data.registrants">
         <div flex="25">
-          <md-icon ng-if="registrant.attend" icon="stars" size="48" style="width: 48px; height: 48px; fill: #4CAF50; cursor: pointer;" ng-click="data.checkout($event, registrant)"></md-icon>
-          <md-icon ng-if="!registrant.attend" icon="error" size="48" style="width: 48px; height: 48px; fill: #f44336; cursor: pointer;" ng-click="data.checkin($event, registrant)"></md-icon>
-          <md-icon ng-if="registrant.speaker" icon="volume_up" size="48" style="width: 48px; height: 48px; fill: #e57373;"></md-icon>
+          <md-icon icon="stars"
+                   ng-click="data.checkout($event, registrant)"
+                   ng-if="registrant.attend"
+                   size="48"
+                   style="width: 48px; height: 48px; fill: #4CAF50; cursor: pointer;"></md-icon>
+          <md-icon icon="error"
+                   ng-click="data.checkin($event, registrant)"
+                   ng-if="!registrant.attend"
+                   size="48"
+                   style="width: 48px; height: 48px; fill: #f44336; cursor: pointer;"></md-icon>
+          <md-icon icon="volume_up"
+                   ng-if="registrant.speaker"
+                   size="48"
+                   style="width: 48px; height: 48px; fill: #e57373;"></md-icon>
         </div>
-        
         <div flex="60">
-          <div class="md-list-item-text" layout="row">
+          <div class="md-list-item-text"
+               layout="row">
             <div flex="25">
-              <span class="md-title">{{registrant.displayId}}</span><br />
+              <span class="md-title">{{registrant.displayId}}</span>
+              <br />
               <h4 style="color: rgba(0,0,0,0.65);">{{registrant.confirmation}}</h4>
             </div>
             <div flex="50">
-              <span class="md-title">{{registrant.lastname | trim}}, {{registrant.firstname | trim}}</span><br />
+              <span class="md-title">{{registrant.lastname | trim}}, {{registrant.firstname | trim}}</span>
+              <br />
               <h4 style="color: rgba(0,0,0,0.65);">{{registrant.company}}</h4>
             </div>
             <div flex="25">
@@ -45,7 +80,8 @@
           </div>
         </div>
         <div flex="15">
-          <md-button aria-label="Info" ng-click="data.showSheet($event, registrant)">
+          <md-button aria-label="Info"
+                     ng-click="data.showSheet($event, registrant)">
             <md-icon icon="more_vert"></md-icon>
           </md-button>
         </div>
@@ -53,9 +89,11 @@
       </md-list-item>
     </md-list>
   </md-content>
-  <md-content layout-padding layout="row" style="background-color: #E8EAF6; min-height: 45px;">
+  <md-content layout="row"
+              layout-padding=""
+              style="background-color: #E8EAF6; min-height: 45px;">
     <div>Total: {{data.count}}</div>
-    <div flex></div>
+    <div flex=""></div>
     <div>Checked In: {{data.checkedin}}</div>
   </md-content>
 </div>

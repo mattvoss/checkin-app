@@ -2,7 +2,7 @@
   position:absolute;
   z-index: 20;
   font-size:30px;
-  top: 35px;
+  top: 25px;
   left: 50px;
   transform: scale(.88,.88);
 }
