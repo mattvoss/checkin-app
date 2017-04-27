@@ -5,26 +5,27 @@ module.exports = function(grunt) {
   // Load Grunt tasks declared in the package.json file
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
   var jsSrc = [
-        'lib/lodash/dist/lodash.js',
-        'lib/angular-ui-router/angular-ui-router.js',
-        'lib/angular-animate/angular-animate.js',
-        'lib/angular-aria/angular-aria.js',
-        'lib/angular-material/angular-material.js',
-        'lib/angular-moment/angular-moment.js',
-        'lib/ng-lodash/ng-lodash.js',
-        'lib/angular-material-icons/angular-material-icons.min.js',
-        'lib/js-data/js-data.js',
-        'lib/js-data-angular/js-data-angular.js',
-        'lib/card/card.js',
-        'lib/angular-pdf/angular-pdf.js',
-        'lib/credit-card-track-parser/lib/credit_card_track_parser.js',
-        'lib/payment/payment.js',
-        'lib/angular-ui-mask/mask.js',
-        'lib/angular-electron/angular-electron.js',
-        'lib/socket.io-client/socket.io.js'
+        'bower_components/lodash/dist/lodash.js',
+        'bower_components/moment/moment.js',
+        'bower_components/angular-ui-router/release/angular-ui-router.js',
+        'bower_components/angular-animate/angular-animate.js',
+        'bower_components/angular-aria/angular-aria.js',
+        'bower_components/angular-material/angular-material.js',
+        'bower_components/angular-moment/angular-moment.js',
+        'bower_components/ng-lodash/build/ng-lodash.js',
+        'bower_components/angular-material-icons/angular-material-icons.min.js',
+        'bower_components/js-data/dist/js-data.js',
+        'bower_components/js-data-angular/dist/js-data-angular.js',
+        'bower_components/card/lib/js/card.js',
+        'bower_components/angular-pdf/dist/angular-pdf.js',
+        'bower_components/credit-card-track-parser/lib/credit_card_track_parser.js',
+        'bower_components/payment/lib/payment.js',
+        'bower_components/angular-ui-mask/dist/mask.js',
+        'bower_components/angular-electron/angular-electron.js',
+        'bower_components/socket.io-client/dist/socket.io.js'
       ],
       cssSrc = [
-        'lib/angular-material/angular-material.css',
+        'bower_components/angular-material/angular-material.css',
         'src/css/app.css'
       ];
   // Project configuration.
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
     bower: {
       install: {
         options: {
-          targetDir: './lib',
+          targetDir: './bower_components',
           layout: 'byType',
           install: true,
           verbose: false,
@@ -125,7 +126,7 @@ module.exports = function(grunt) {
             expand: true,
             flatten: true,
             src: [
-              'lib/pdfjs-dist/*.js'
+              'bower_components/pdfjs-dist/build/*.js'
             ],
             dest: 'app/js',
             filter: 'isFile'
@@ -217,7 +218,7 @@ module.exports = function(grunt) {
   grunt.registerTask('watch', [ 'run', 'watch' ]);
 
   // Default task(s).
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', ['dev']);
 
 };
 }());

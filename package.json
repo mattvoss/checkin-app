@@ -6,11 +6,6 @@
     "mac": {
       "category": "public.app-category.productivity"
     },
-    "files": [
-      "node_modules/",
-      "app/",
-      "package.json"
-    ],
     "dmg": {
       "contents": [
         {
@@ -33,10 +28,10 @@
         "AppImage",
         "deb"
       ]
+    },
+    "directories": {
+      "output": "dist"
     }
-  },
-  "directories": {
-    "output": "dist"
   },
   "scripts": {
     "install": "electron-rebuild",
