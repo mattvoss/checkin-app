@@ -48,9 +48,9 @@ function createWindow () {
   mainWindow.loadURL('file://' + __dirname + '/templates/index.html');
 
   // Open the DevTools.
-  if (process.env.NODE_ENV === "development") {
+  //if (process.env.NODE_ENV === "development") {
     mainWindow.webContents.openDevTools();
-  }
+  //}
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
