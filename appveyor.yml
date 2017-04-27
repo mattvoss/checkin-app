@@ -1,28 +1,38 @@
 platform:
   - x64
   
+os: unstable
+
 cache:
   - node_modules
   - '%APPDATA%\npm-cache'
   - '%USERPROFILE%\.electron'
 
+environment:
+  GH_TOKEN:
+      secure: +YjJhRG/Coo3ShirMq4YVt7XD4G1/0y92Fv1gwqYdiDqbUGM7mcCo4GV2RP5wMlV
+  matrix:
+    - nodejs_version: 6
+
 install:
-  - ps: Install-Product node 6 x64
+  - ps: Install-Product node $env:nodejs_version
   - git reset --hard HEAD
-  - npm install npm -g
+  - set CI=true
+  - npm install -g npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%
   - node -v
   - npm -v
   - npm prune
   - npm install
-  
-build_script:
-  - node --version
-  - npm --version
-  - npm run dist
-  - dir %APPVEYOR_BUILD_FOLDER%\dist\win-x64
-  
-artifacts:
-  - path: 'dist\**\*.*'
-    name: WindowsInstall
 
-test: off
+matrix:
+  fast_finish: true
+
+build: off
+version: '{build}'
+shallow_clone: true
+clone_depth: 1
+  
+test_script:
+  - npm run dist
+  - dir %APPVEYOR_BUILD_FOLDER%

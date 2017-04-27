@@ -5,7 +5,38 @@
     "appId": "xyz.vosswerks.checkin",
     "mac": {
       "category": "public.app-category.productivity"
+    },
+    "files": [
+      "node_modules/",
+      "app/",
+      "package.json"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     }
+  },
+  "directories": {
+    "output": "dist"
   },
   "scripts": {
     "install": "electron-rebuild",
@@ -20,7 +51,7 @@
     "compile:dev": "grunt dev",
     "compile": "grunt build",
     "pack": "npm run compile && build",
-    "dist": "npm run compile && build",
+    "dist": "npm run compile && build --publish onTagOrDraft",
     "release": "npm run compile && build",
     "dist:osx": "build --platform osx",
     "dist:win64": "build --platform win32 --arch x64"
