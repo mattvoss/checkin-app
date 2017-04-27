@@ -21,7 +21,7 @@
   "private": true,
   "main": "./main.js",
   "dependencies": {
-    "angular": "^1.5.5",
+    "angular": "1.5.5",
     "async": "^v2.0.0-rc.4",
     "axon": "^2.0.1",
     "blob-util": "^1.2.1",
