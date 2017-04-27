@@ -16,7 +16,6 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - git reset --hard HEAD
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
