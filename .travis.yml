@@ -44,3 +44,5 @@ before_script:
 
 script:
   - npm run dist
+
+after_script: set +e
