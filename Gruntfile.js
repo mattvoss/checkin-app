@@ -6,7 +6,6 @@ module.exports = function(grunt) {
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
   var jsSrc = [
         'bower_components/lodash/dist/lodash.js',
-        'bower_components/moment/moment.js',
         'bower_components/angular-ui-router/release/angular-ui-router.js',
         'bower_components/angular-animate/angular-animate.js',
         'bower_components/angular-aria/angular-aria.js',
