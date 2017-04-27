@@ -7,6 +7,7 @@
       [
         'ui.router', 
         'angularMoment', 
+        'ngAnimate',
         'ngMaterial', 
         'ngMdIcons', 
         'js-data', 
