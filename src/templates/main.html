@@ -1,7 +1,9 @@
 <div flex
-     layout
+     layout="column"
      layout-fill>
-  <md-content layout="row"
+  <md-content 
+    flex="20"
+    layout="row"
               layout-padding
               style="min-height: 90px;">
     <div flex="33"
@@ -20,7 +22,7 @@
     <div flex="50"
          layout-align='start center'>
       <md-input-container layout-fill
-                          style="margin-top: 0.35em;">
+                          style="margin-top: 1.00em;">
         <input aria-label="search"
                ng-keyup="$event.keyCode == 13 && data.searchClick($event)"
                ng-model="data.searchVal"
@@ -45,7 +47,7 @@
                     layout="row"
                     md-ink-ripple
                     ng-repeat="registrant in data.registrants">
-        <div flex="25">
+        <div flex="15">
           <md-icon icon="stars"
                    ng-click="data.checkout($event, registrant)"
                    ng-if="registrant.attend"
@@ -61,7 +63,7 @@
                    size="48"
                    style="width: 48px; height: 48px; fill: #e57373;"></md-icon>
         </div>
-        <div flex="60">
+        <div flex="70">
           <div class="md-list-item-text"
                layout="row">
             <div flex="25">
@@ -89,9 +91,11 @@
       </md-list-item>
     </md-list>
   </md-content>
-  <md-content layout="row"
+  <md-content 
+    flex="10"
+    layout="row"
               layout-padding
-              style="background-color: #E8EAF6; min-height: 45px;">
+              style="background-color: #E8EAF6; height: 45px;">
     <div>Total: {{data.count}}</div>
     <div flex></div>
     <div>Checked In: {{data.checkedin}}</div>
