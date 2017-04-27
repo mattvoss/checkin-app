@@ -1,59 +1,46 @@
-language: node_js
-os:
-- osx
-osx_image: xcode7.3
-dist: trusty
 sudo: required
+dist: trusty
+
+language: c
+
+matrix:
+  include:
+    - os: osx
+    - os: linux
+      env: CC=clang CXX=clang++ npm_config_clang=1
+      compiler: clang
+
 node_js:
-- '6'
+  - 6
+
 cache:
-  apt: true
-  bundler: true
   directories:
-  - node_modules
-  - test/testApp/node_modules
-  - "$HOME/.electron"
-  - "$HOME/.cache/fpm"
+    - node_modules
+
 addons:
   apt:
     sources:
-    - mono
+      - ubuntu-toolchain-r-test
     packages:
-    - icnsutils
-    - graphicsmagick
-    - mono-devel
-    - xz-utils
-    - p7zip-full
-before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ifconfig -a; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git lfs pull; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install fpm; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://github.com/github/git-lfs/releases/download/v1.2.0/git-lfs-linux-amd64-1.2.0.tar.gz
-  | tar -xz; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git-lfs-1.2.0/git-lfs pull; fi
+      - g++-4.8
+      - icnsutils
+      - graphicsmagick
+      - libgnome-keyring-dev
+      - xz-utils
+      - xorriso
+      - xvfb
+
 install:
-- nvm install 6
-- npm install npm -g
-- npm install
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm install -g 7zip-bin; fi
-- npm install electron-builder@next
-- npm prune
+  - nvm install 6
+  - npm install electron-builder@next
+  - npm install
+  - export DISPLAY=':99.0'
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start &
+  - sleep 3
+
 script:
-- npm run dist
-after_success:
-- cd dist/
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar -czf osx.$DATE.tgz checkin-app-darwin-x64;
-  fi
-- ls -alt
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -vv -u $DEPLOY_USER:$DEPLOY_PASS -T osx.$DATE.tgz  https://dav.box.com/dav/osx-builds/osx.$DATE.tgz ;
-  fi
-branches:
-  except:
-  - "/^v\\d+\\.\\d+\\.\\d+$/"
-env:
-  global:
-  - DATE=$(date +%s)
-  - secure: axENIzEsrepZWbynDXXgvAvk5qgLLZRWDHrK5NeTUEiZi+aslT9GzJtU/jC182lesHzRrfgTrH5SpHGLHKXhSM5fkBGBQKxHxKsJz1qxMTzHN5na96+okXZoIO/UlMKEZSANp0N05hYp/M+aFB9Jtgr9dYv5S0iN0xkh39wO/+0=
-  - secure: dy9zGbmzEFeqxVv/h9XiSrpzwKh7RBR5abxlgALadgqT0sJPY+tXeJRFjVhDh4vQFjwWyvxDnOJuefoFqZ7PrD6Fwq/neDjPVHOgkAbYmZqRf6bTGPx37R3mYU2hJUUqC6BgpnZuo6l5KXVxh/tonMmEt1ySUIETC7vZ5vuY4w0=
+  - npm run dist
