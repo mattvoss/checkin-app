@@ -3,6 +3,7 @@ const qs = require ("querystring");
 const electron = require('electron');
 const app = electron.app;
 const blobUtil = require ("blob-util");
+const Menu = require("menu");
 const BrowserWindow = electron.BrowserWindow;
 const windowStateKeeper = require('electron-window-state');
 const package = require('./package.json');
@@ -32,6 +33,24 @@ ipcMain.on('new-window', function(event, arg) {
   openNewWindow(arg);
 });
 function createWindow () {
+  // Create the Application's main menu
+  const menuTemplate = [{
+      label: "Application",
+      submenu: [
+          { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+      ]}, {
+      label: "Edit",
+      submenu: [
+          { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+          { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+          { type: "separator" },
+          { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+          { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+      ]}
+  ];
+
   let mainWindowState = windowStateKeeper({
     defaultWidth: package.window.width,
     defaultHeight: package.window.height
@@ -59,6 +78,8 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 }
 
 function openNewWindow(pdf) {
