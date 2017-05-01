@@ -1,28 +1,27 @@
-<div flex
+<div flex=""
      layout="column"
-     layout-fill>
-  <md-content 
-    flex="20"
-    layout="row"
-              layout-padding
+     layout-fill="">
+  <md-content flex="20"
+              layout="row"
+              layout-padding=""
               style="min-height: 90px;">
     <div flex="33"
          layout-align='start center'>
-      <md-select flex
-                 layout-fill
-                 ng-model="data.category"
-                 placeholder="Pick"
-                 style="margin-top: -1.55em;">
-        <md-option value="name">Name</md-option>
-        <md-option value="company">Company</md-option>
-        <md-option value="confirmation">Confirmation Number</md-option>
-        <md-option value="registrantid">Registrant ID</md-option>
-      </md-select>
+      <md-input-container layout-fill="">
+        <md-select flex=""
+                   layout-fill=""
+                   ng-model="data.category"
+                   placeholder="Pick">
+          <md-option value="name">Name</md-option>
+          <md-option value="company">Company</md-option>
+          <md-option value="confirmation">Confirmation Number</md-option>
+          <md-option value="registrantid">Registrant ID</md-option>
+        </md-select>
+      </md-input-container>
     </div>
     <div flex="50"
          layout-align='start center'>
-      <md-input-container layout-fill
-                          style="margin-top: 1.00em;">
+      <md-input-container layout-fill="">
         <input aria-label="search"
                ng-keyup="$event.keyCode == 13 && data.searchClick($event)"
                ng-model="data.searchVal"
@@ -33,19 +32,19 @@
                  style="right: 2px; color: rgba(0,0,0,0.24); left: inherit;"></md-icon>
       </md-input-container>
     </div>
-    <div flex>
+    <div flex="">
       <md-button aria-label="Search"
                  ng-click="data.searchClick($event)">
         <md-icon icon="search"></md-icon>
       </md-button>
     </div>
   </md-content>
-  <md-content flex
+  <md-content flex=""
               layout="column">
     <md-list>
       <md-list-item class="md-3-line"
                     layout="row"
-                    md-ink-ripple
+                    md-ink-ripple=""
                     ng-repeat="registrant in data.registrants">
         <div flex="15">
           <md-icon icon="stars"
@@ -91,13 +90,11 @@
       </md-list-item>
     </md-list>
   </md-content>
-  <md-content 
-    flex="10"
-    layout="row"
-              layout-padding
+  <md-content layout="row"
+              layout-padding=""
               style="background-color: #E8EAF6; height: 45px;">
     <div>Total: {{data.count}}</div>
-    <div flex></div>
+    <div flex=""></div>
     <div>Checked In: {{data.checkedin}}</div>
   </md-content>
 </div>
